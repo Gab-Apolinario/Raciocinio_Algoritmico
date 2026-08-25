@@ -1,5 +1,5 @@
 from math import pi
-from enum import Enum
+from math import ceil
 
 #EX.1: Elabore um agoritmo que leia um numero total de segundos e converta0o para
 # horas, minutos e segundos, mostrando o serultado no formato hh:mm:ss
@@ -16,8 +16,8 @@ def converter_segundos(segundos: int) -> None:
 
     print(f"{horas:02d}:{minutos:02d}:{segundos_restantes:02d}")
 
-# total_segundos = int(input("Digite o número total de segundos: "))
-# converter_segundos(total_segundos)
+total_segundos = int(input("Digite o número total de segundos: "))
+converter_segundos(total_segundos)
 
 #EX.2: Escreva um algoritmo que leia o lado de um quadrado e calcule a área do maior círculo que pode ser inscrito dentro desse quadrado.
 
@@ -30,8 +30,8 @@ def quadrado_circulo(ladoSqr: int) -> None:
     areaCirculo = pi * pow(raio, 2)
     print(f"Area do maior círculo que cabe no quadrado: {areaCirculo:.2f}")
 
-# ladoSqr = int(input("Digite o valor inteiro do lado do quadrado: "))
-# quadrado_circulo(ladoSqr)
+ladoSqr = int(input("Digite o valor inteiro do lado do quadrado: "))
+quadrado_circulo(ladoSqr)
 
 #EX.3: Construa um algoritmo que calcule o valor de uma conta de energia elétrica de uma cidade hipotética considerando:
 #       leitura do mês anterior (em Kwh) e leitura do mês atual (em Kwh). O valor do kWh é de R$0,636
@@ -45,10 +45,10 @@ def conta_energia(kwhMesAnterior: float, kwhMesAtual: float) -> float:
     consumoMensalReais = consumoMes * KWH * ICMS
     return consumoMensalReais
 
-# leituraAnterior = float(input("Digite a leitura do mês anteiror (kWh): "))
-# leituraAtual = float(input("Digite a leitura do mês atual (kWh): "))
-# valorConta = conta_energia(leituraAnterior, leituraAtual)
-# print(f"Valor da conta de energia: R${valorConta:.2f}")
+leituraAnterior = float(input("Digite a leitura do mês anteiror (kWh): "))
+leituraAtual = float(input("Digite a leitura do mês atual (kWh): "))
+valorConta = conta_energia(leituraAnterior, leituraAtual)
+print(f"Valor da conta de energia: R${valorConta:.2f}")
 
 #EX.4: Um item de loot tem uma "pontuação de raridade" (de 0 a 1000) que precisa ser convertida em três atributos do item:
 # Poder = pontuação * 0.5;
@@ -67,9 +67,9 @@ def pontuacao_raridade_item(raridade: int, nomeItem: str) -> None:
 
     print(f"Item {nomeItem} | Poder = {poder:.2f} | Durabilidade = {durabilidade:.2f} | Valor Bruto = {round(valorVendaBruto):.2f} | Valor com Taxa = {round(valorVendaBruto) * TAXA_MERCADO:.2f}")
 
-# nomeItem = str(input("Digite o nome do item: "))
-# raridadeItem = int(input("Digite a raridade do item (0 a 1000): "))
-# pontuacao_raridade_item(raridadeItem, nomeItem)
+nomeItem = str(input("Digite o nome do item: "))
+raridadeItem = int(input("Digite a raridade do item (0 a 1000): "))
+pontuacao_raridade_item(raridadeItem, nomeItem)
 
 #EX.5: Um jogo de RPG converte tempo de jogo em "dias de aventura":
 # 1 dia de aventura = 8 horas reais
@@ -90,8 +90,8 @@ def dias_aventura(minutosJogados: int) -> None:
 
     print(f"Dias de Aventura: {diaAventura} | Horas de Aventura: {horasAventura} | Minutos de Aventura: {minutosAventura} | Moedas Acumuladas: {moedas} ")
 
-# minutos_totais = int(input("Digite quantos minutos totais você já jogou: "))
-# dias_aventura(minutos_totais)
+minutos_totais = int(input("Digite quantos minutos totais você já jogou: "))
+dias_aventura(minutos_totais)
 
 #EX.6: Elabora um algoritmo que leia um número inteiro e considerando que este possui exatamente três algarismos,
 # mostre o valor da centena, da dezena e da unidade(use apenas operações matemáticas, sem condicionais)
@@ -104,10 +104,27 @@ def num_tres_algarismos(numeroTresCasas: int) -> None:
 
     print(f"Centenas: {centenas} | Dezenas: {dezenas} | Unidades: {unidades}")
 
-# numero = int(input("Digite um número de três algarismos: "))
-# num_tres_algarismos(numero)
+numero = int(input("Digite um número de três algarismos: "))
+num_tres_algarismos(numero)
 
-#EX.7: 
+#EX.7: Os fabricantes de discos rígidos usam potências de dez (definidas no Sistema Internacional) para expressar
+# a capacidade dos discos. Assim quando é anunciado um disco rígido com 500 GB (ou 500 Gbytes, em grafia
+# correta), o disco tem aproximadamente 500 bilhões de bytes (500 x 109); que correspondem, entretanto, a
+# aproximadamente 465,6 GiB (465,6 gibibytes = 465 x 230).
+# Para maiores informações sobre esta ambiguidade ler o artigo da Wikipédia sobre “Prefixo binário”.
+# Elabore um algoritmo que leia a capacidade de um disco rígido (em notação comercial) e mostre quantos
+# gibibytes de fato ele tem.
+
+def quantidade_GB(capacidadeHD: float) -> float:
+    BYTES: int = 1000000000
+    GiB: int = 2**30
+    capacidadeRealBytes = capacidadeHD * BYTES
+    capacidadeGIB = capacidadeRealBytes / GiB
+    return capacidadeGIB
+
+capacidade = float(input("Digite a capacidade do disco (em GB): "))
+resultado = quantidade_GB(capacidade)
+print(f"Capacidade real: {resultado:.2f} GiB")
 
 #EX.8: Elabore um algoritmo que leia três valores inteiros a, b e c. Em seguida, encontre e mostre o maior dos 3 valores usando a fórmula:
 # maiorAB = (a + b + abs(a - b)) / 2
@@ -119,12 +136,12 @@ def maior_valor_ABC(a: int, b: int, c: int) -> int:
     maiorNum = maior_de_dois(maiorAB, c)
     return int(maiorNum)
 
-# valor_a = int(input("Digite o valor de A: "))
-# valor_b = int(input("Digite o valor de B: "))
-# valor_c = int(input("Digite o valor de C: "))
+valor_a = int(input("Digite o valor de A: "))
+valor_b = int(input("Digite o valor de B: "))
+valor_c = int(input("Digite o valor de C: "))
 
-# resultado = maior_valor_ABC(valor_a, valor_b, valor_c)
-# print(f"O maior valor é: {resultado}")
+resultado = maior_valor_ABC(valor_a, valor_b, valor_c)
+print(f"O maior valor é: {resultado}")
 
 #EX.9: Um caixa automático possui as seguintes cédulas disponíveis: 50, 20, 10, 5, 2 e 1.
 # Faça um algoritmo que leia o valor de um saque e mostre a quantidade de bilhetes de cada nota necessários para comporem
@@ -147,3 +164,41 @@ def cedulas_caixa(valorSaque: int) -> None:
 
 valorSaque = int(input("Digite o valor que deseja sacar: "))
 cedulas_caixa(valorSaque)
+
+#EX.10: Uma guilda em um MMO recebe recompensas semanais em três moedas diferentes: Ouro, Prata e Cobre,
+# sendo que 1 Ouro = 100 Prata e 1 Prata = 100 Cobre
+# O sistema do jogo, porém, armazena tudo internamente como um único valor em CObre. Elabore um algoritmo
+# que leia um valor total em Cobre e converta-o par a notação usual do jogo, mostrando quantas moedas de Ouro, Prata e Cobre
+# esse valor representa
+
+def conversao_moedas(totalCobre: int) -> None:
+    ouro = totalCobre // 10000 #1 ouro = 10000 cobre
+    restoOuro = totalCobre % 10000
+    prata = restoOuro // 100
+    cobreRestante = restoOuro % 100
+    
+    print(f"{totalCobre} Cobre = {ouro} Ouro, {prata} Prata e {cobreRestante} Cobre")
+
+totalCobre = int(input("Digite o total de cobre: "))
+conversao_moedas(totalCobre)
+
+#EX.11: Em um jogo de construção, um terreno retangular precisa ser cercado com muralhas. Elabora um algoritmo que leia
+# o Comprimento e a Largura do terreno (em metros) e calcule:
+# - Area total do terreno
+# - Perímetro (metragem de muralha necessária)
+# - Quantidade de blocos de muralha (sabendo que cada bloca cobre 2.5 metros do perímetro, sempre arredondando para cima)
+# - Custo total, sabendo que cada bloco custa 45 moedas de ouro.
+
+def calculo_muralha(comprimentoTerreno: float, larguraTerreno: float) -> None:
+    BLOCO_MURALHA: float = 2.5
+    CUSTO_BLOCO: int = 45
+    areaTerreno = comprimentoTerreno * larguraTerreno
+    perimetroTerreno = (comprimentoTerreno * 2) + (larguraTerreno * 2)
+    blocosMuralha = ceil(perimetroTerreno / BLOCO_MURALHA)
+    custoTotal = blocosMuralha * CUSTO_BLOCO
+
+    print(f"Area Terreno: {areaTerreno} | Perímetro Terreno: {perimetroTerreno} | Blocos Necessários: {blocosMuralha} | Custo Total: {custoTotal}")
+
+comprimentoTerreno = float(input("Digite o comprimento do terreno (em metros): "))
+larguraTerreno = float(input("Digite a largura do terreno (em metros): "))
+calculo_muralha(comprimentoTerreno, larguraTerreno)

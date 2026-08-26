@@ -15,7 +15,7 @@ resto = salario_funcionario // salario_minimo
 print(resto)
 
 #EX.3: Escreva um algoritmo que leia o peso (em KG) e a altura (em metros) de uma pessoa,
-#      calcule e exiba o seu inddice de massa corporal (IMC), usanod a fórmula: IMC = peeso / altura²
+#      calcule e exiba o seu indice de massa corporal (IMC), usanod a fórmula: IMC = peeso / altura²
 
 peso = float(input("Digite seu peso em KG:"))
 altura = float(input("Digite sua altura em metros: "))

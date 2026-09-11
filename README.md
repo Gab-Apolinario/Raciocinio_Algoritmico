@@ -19,7 +19,9 @@ são resolvidas.
 | - | ----- | ------ | --------------------- |
 | 01 | Problemas Sequenciais I | ✅ | `input()`, conversão de tipos, operadores aritméticos, formatação `.2f` |
 | 02 | Problemas Sequenciais II | ✅ | Funções puras, type hints, docstrings, `round`/`ceil` |
-| 03 | — | ⬜ | — |
+| 03 | Problemas de Seleção I | ✅ | Estruturas condicionais simples, compostas e aninhadas (`if`/`elif`/`else`, `and`/`or`) |
+| 04 | Problemas de Seleção II | 🔄 | Em andamento — classificação de temperatura, sistema de loja de poções, sistema de XP |
+| 05 | — | ⬜ | — |
 | ... | — | ⬜ | — |
 | 18 | — | ⬜ | — |
 
@@ -40,6 +42,9 @@ saída, facilitando testes e reaproveitamento.
   fácil de revisar e depurar
 - Identificar e corrigir o padrão de bug mais comum nos meus próprios
   exercícios: usar a variável errada em operações de módulo/resto em cascata
+- Compor condições com `and`/`or` para representar regras de negócio com
+  múltiplos critérios (faixas etárias, condições de vitória, classificação
+  de raridade)
 
 ## 🛠️ Tecnologias
 

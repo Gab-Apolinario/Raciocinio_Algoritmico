@@ -14,13 +14,13 @@ def valor_IMC(massa: float, altura: float) -> None:
     imc = massa / pow(altura, 2)
     
     if imc > 30:
-        print(f"IMC: {imc} | OBESO")
+        print(f"IMC: {imc:.2f} | OBESO")
     elif imc > 25:
-        print(f"IMC: {imc} | ACIMA DO PESO")
-    elif imc > 18.5:
-        print(f"IMC: {imc} | PESO NORMAL")
+        print(f"IMC: {imc:.2f} | ACIMA DO PESO")
+    elif imc >= 18.5:
+        print(f"IMC: {imc:.2f} | PESO NORMAL")
     else:
-        print(f"IMC: {imc} | ABAIXO DO PESO")
+        print(f"IMC: {imc:.2f} | ABAIXO DO PESO")
 
 massa : float = float(input("Digite sua massa (KG): "))
 altura : float = float(input("Digite sua altura (metros): "))
@@ -40,9 +40,9 @@ def classificacao_produto(codigo: int) -> None:
     print("Código Recebido! Classificando Produto...")
     
     if codigo == 1:
-        print("Alimento Perecível")
-    elif codigo > 1 and codigo <= 4:
         print("Alimento Não Perecível")
+    elif codigo > 1 and codigo <= 4:
+        print("Alimento Perecível")
     elif codigo == 5 or codigo == 6:
         print("Vestuário")
     elif codigo == 7:

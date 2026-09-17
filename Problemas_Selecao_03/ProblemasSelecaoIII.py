@@ -1,4 +1,61 @@
-# Construa um algoritmo que seja capaz de concluir qual dentre os seguintes animais fofi escoolhido, através de perguntas e respostas.
+import math
+
+# EX.1: O IMC, Índice de Massa Corporal, é calculado através da seguinte fórmula: IMC = massa / altura² 
+# Elabore um algoritmo que leia a massa (em quilogramas) e a altura (em metros) do usuário e mostre o valor do
+# IMC e qual sua condição segundo o critério apresentado na tabela da OMS (Organização Mundial de Saúde):
+
+#   CONDIÇÃO         -       IMC em Adultos
+# Abaixo do Peso     ->      Abaixo de 18.5
+# No peso Normal     ->      Entre 18.5 e 25
+# Acima do Peso      ->      Entre 25 e 30
+# Obeso              ->      Acima de 30
+
+def valor_IMC(massa: float, altura: float) -> None:
+    imc = massa / pow(altura, 2)
+    
+    if imc > 30:
+        print(f"IMC: {imc} | OBESO")
+    elif imc > 25:
+        print(f"IMC: {imc} | ACIMA DO PESO")
+    elif imc > 18.5:
+        print(f"IMC: {imc} | PESO NORMAL")
+    else:
+        print(f"IMC: {imc} | ABAIXO DO PESO")
+
+massa : float = float(input("Digite sua massa (KG): "))
+altura : float = float(input("Digite sua altura (metros): "))
+valor_IMC(massa, altura)
+
+# EX.2: Uma determinada loja de varejo classifica seus produtos utilizando códigos conforme descrito na tabela abaixo.
+# Elabore um algoritmo que leia o código de um produto e mostre sua classificação. Para qualquer código inexistente, mostre “Código inválido”.
+
+#   CÓDIGO     -          CLASSIFICAÇÃO
+#     1        ->      Alimento Não Perecível
+# 2, 3 ou 4    ->      Alimento Perecível
+#  5 ou 6      ->      Vestuário
+#     7        ->      Higiene Pessoal
+# 8 até 15     ->      Limpeza e Utensílios Domésticos
+
+def classificacao_produto(codigo: int) -> None:
+    print("Código Recebido! Classificando Produto...")
+    
+    if codigo == 1:
+        print("Alimento Perecível")
+    elif codigo > 1 and codigo <= 4:
+        print("Alimento Não Perecível")
+    elif codigo == 5 or codigo == 6:
+        print("Vestuário")
+    elif codigo == 7:
+        print("Higiene Pessoal")
+    elif codigo >= 8 and codigo <= 15:
+        print("Limpeza e utensílios Domésticos")
+    else:
+        print("Código Inválido")
+        
+codigo : int = int(input("Digite o valor do código de identificação do produto (inteiro): "))
+classificacao_produto(codigo)
+
+# EX.3: Construa um algoritmo que seja capaz de concluir qual dentre os seguintes animais fofi escoolhido, através de perguntas e respostas.
 # Animais possíveis: leão, cavalo, homem, macacoo, morcego, baleia, avestruz, pinguim, pato, águia, tartaruga, crocodilo e cobra.
 # A ideia é usar seleção encadeada e fazer perguntas de acordo com as respostas do usuário e concluir qual é o animal selecionado.
 # Exemplos:

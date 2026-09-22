@@ -89,15 +89,17 @@ classificacao_produto(codigo)
 # ├── Carnívoros → Crocodilo
 # └── Sem patas  → Cobra
 
-# def verificar_resposta(resposta: str) -> bool:
-#     if resposta[0] not in ["s", "n"]:
-#         print("Resposta inválida! Digite S ou N.")
-#         return False
-#     return True
+def verificar_resposta(pergunta: str) -> bool:
+    resposta = input(f"{pergunta} (S/N): ").strip().lower()
+    while resposta[0] not in ["s", "n"]:
+        print("Resposta inválida! Digite S ou N.")
+        resposta = input(f"{pergunta} (S/N): ").strip().lower()
+    if resposta[0] == "s":
+        return True
+    return False
 
 def identificar_animal() -> None:
-    mamifero = input("É mamífero? (S/N): ").strip().lower()
-    if mamifero[0] == "s":
+    if verificar_resposta("É mamífero?"):
         quadrupede = input("É um mamífero quadrúpede? (S/N): ").strip().lower()
         if quadrupede[0] == "s":
             carnivoro = input("É um mamífero carnívero? (S/N): ").strip().lower()

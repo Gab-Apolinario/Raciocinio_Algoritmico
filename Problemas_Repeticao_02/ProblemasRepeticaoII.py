@@ -1,4 +1,5 @@
 import random
+import math
 
 # EX.1: Um jogador começa no nível 1 e ganha 3 pontos de habilidade a cada partida, enquanto um NPC rival começa no 
 # nível 5 e ganha 1 ponto por partida. Escreva um algoritmo que calcule quantas partidas serão necessárias até o jogador 
@@ -101,10 +102,141 @@ def sistema_power_ups() -> None:
             power_ups += 1
         tentativas += 1
     
-    print(f"3 Power Ups Coletados! Maior Power Up: {maior_power_up} Tentativas Necessárias: {tentativas}")
+    print(f"3 Power Ups Coletados! | Maior Power Up: {maior_power_up} | Tentativas Necessárias: {tentativas}")
     
 #sistema_power_ups()
 
+# EX.6: Leia uma sequência de danos de golpes em combo e só termine quando aparecer uma sequência
+# de 3 golpes em ordem crescente de dano (combo perfeito). Mostre a média desses 3 golpes finais.
+
+def combo_perfeito():
+    soma : int = 0
+    dano_anterior : int = 0
+    golpes_combo : int = 0
+    while golpes_combo < 3:
+        dano = random.randint(1, 10) #randomiza
+        print(f"Dano do golpe: {dano}")
+        if dano > dano_anterior: #valida
+            dano_anterior = dano #guarda
+            golpes_combo += 1
+            soma += dano
+        else: #não é crescente a ordem
+            dano_anterior = dano
+            golpes_combo = 1
+            soma = dano
+        
+    print(f"Combo Perfeito! Golpes: {golpes_combo} | Soma: {soma} | Média: {soma/golpes_combo:.2f}")
+            
+#combo_perfeito()
+
+# EX.7: O número de inimigos por onda segue uma progressão do tipo Fibonacci (1, 1, 2, 3, 5, 8, 13...).
+# Mostre quantos inimigos aparecem em cada onda enquanto o total for menor que 500.
+
+def inimigos_fibonacci() -> None:
+    num = 1
+    inimigos_total : int = 1
+    onda_ultima : int = 0
+    onda_penultima : int = 1
+    proximo_termo : int = 0
+    while inimigos_total < 500:
+        proximo_termo = onda_ultima + onda_penultima
+        onda_ultima, onda_penultima = proximo_termo, onda_ultima
+        inimigos_total += proximo_termo
+        print(f"Onda: {num} Inimigos: {proximo_termo}")
+        num += 1
+        
+#inimigos_fibonacci()
+
+# EX.8: Um mago tem 200 pontos de mana. Cada feitiço lançado consome uma quantidade de mana informada pelo 
+# usuário. Elabore um algoritmo que leia o custo de cada feitiço lançado e pare automaticamente quando a mana não 
+# for mais suficiente para o próximo feitiço, informando quantos feitiços foram lançados e quanta mana sobrou
+
+def mana_mago() -> None:
+    mana : int = 200
+    feiticos_lancados : int = 0
+    mana_suficiente : bool = True
+    while mana_suficiente:
+        custo_feitico = int(input("Digite o custo do feitiço (inteiro): "))
+        if mana >= custo_feitico:
+            mana -= custo_feitico
+            feiticos_lancados += 1
+            print(f"Feitiço Lançado! Mana Restante: {mana}")
+        else:
+            mana_suficiente = False
+
+    print(f"Não possui mana suficiente! | Feitiços Lançados: {feiticos_lancados} | Mana restante: {mana}")
+
+#mana_mago()
+
+# EX.9: A série de Ricci difere da série de Fibonacci (1, 1, 2, 3, 5, ...) porque os dois primeiros termos podem ser definidos 
+#pelo usuário. Imprima os n primeiros termos da série de Ricci, sendo que n e o valor dos dois primeiros termos são 
+#fornecidos pelo usuário.
+
+def serie_ricci(qntd_termos: int, termoA: int, termoB: int) -> None:
+    num = 2
+    proximo_termo: int = 0
+    if qntd_termos == 1:
+        print(f"1o. termo = {termoA}")
+    elif qntd_termos <= 0:
+        print("Quantidade de termos inválida!")
+        return
+    else:
+        print(f"1o. termo = {termoA}")
+        print(f"2o. termo = {termoB}")
+    while num < qntd_termos:
+        proximo_termo = termoA + termoB
+        termoB, termoA = proximo_termo, termoB
+        print(f"{num+1}o. termo = {proximo_termo}")
+        num += 1
+    
+# qntd_termos: int = int(input("Digite a quantidade de termos da série Ricci (inteiro): "))
+# termoA: int = int(input("Digite o valor do primeiro termo (inteiro): "))
+# termoB: int = int(input("Digite o valor do segundo termo (inteiro): "))
+#serie_ricci(qntd_termos, termoA, termoB)
+
+# EX.10: A série de Fetuccine difere da série de Ricci porque o termo de posição par é resultado da subtração dos dois 
+# anteriores.  Os  termos  ímpares  continuam  sendo  resultado  da  soma  dos  dois  elementos  anteriores.  Imprima  os  n 
+# primeiros termos da série de Fetuccine, sendo que n e o valor dos dois primeiros termos são fornecidos pelo usuário.
+
+def serie_fetuccine(qntd_termos: int, termoA: int, termoB: int) -> None:
+    num = 2
+    proximo_termo: int = 0
+    if qntd_termos == 1:
+        print(f"1o. termo = {termoA}")
+    elif qntd_termos <= 0:
+        print("Quantidade de termos inválida!")
+        return
+    else:
+        print(f"1o. termo = {termoA}")
+        print(f"2o. termo = {termoB}")
+    
+    while num < qntd_termos:
+        if (num + 1) % 2 == 0: #termo par
+            proximo_termo = termoB - termoA
+            termoB, termoA = proximo_termo, termoB
+            print(f"{num+1}o. termo = {proximo_termo}")
+        else: #termo ímpar
+            proximo_termo = termoA + termoB
+            termoB, termoA = proximo_termo, termoB
+            print(f"{num+1}o. termo = {proximo_termo}")
+        num += 1
+        
+#serie_fetuccine(qntd_termos, termoA, termoB)
+
+# EX.11: Elabore um algoritmo que calcule o valor de S, em que: 
+#S = 1 – 2/4 + 3/9 – 4/16 + 5/25 – 6/36 + ... – 10/100
+
+def serie_s() -> None:
+    s = 0
+    for i in range(1, 11, 1):
+        if i % 2 == 0:
+            s -= i / pow(i, 2)
+        else:
+            s += i / pow(i, 2)
+            
+    print(s)
+
+#serie_s()
 
 # EX.12: Elabore um algoritmo que o valor da série S abaixo, sendo que o valor inteiro de n é fornecido pelo usuário.
 # S = 1/3 + 3/6 + 5/9 + 7/12 + ... + (2n - 1)/3n
@@ -113,8 +245,8 @@ def serie_S(n: int) -> None:
     s = 0
     
     for i in range(1, n+1):
-        num = 2*i - 1
-        den = 3*i
+        num = 2 * i - 1
+        den = 3 * i
         termo = num/den
         s = s + termo
         print(f"{i}o. termo =  {num}/{den} = {termo:.2f}")
@@ -122,3 +254,22 @@ def serie_S(n: int) -> None:
  
 #n : int = int(input("Digite quantos termos (inteiro): "))
 #serie_S(n)
+
+# EX.13: O valor de π pode ser calculado usando como base a seguinte série:
+# S = 1 - 1/3³ + 1/5³ - 1/7³ + 1/9³ - ... +-?
+# Sendo, π = cbrt(S * 32) Elabore um algoritmo que calcule e mostre o valor 
+# de π com base em uma série S de 50 termos.
+
+def valor_pi() -> None:
+    s = 0
+    for i in range(1, 51, 1):
+        den = pow(2 * i - 1, 3)
+        if i % 2 == 0:
+            s -= 1/den
+        else:
+            s += 1/den
+
+    pi = math.cbrt(s * 32)
+    print(pi)
+    
+valor_pi()

@@ -22,9 +22,9 @@ def valor_IMC(massa: float, altura: float) -> None:
     else:
         print(f"IMC: {imc:.2f} | ABAIXO DO PESO")
 
-massa : float = float(input("Digite sua massa (KG): "))
-altura : float = float(input("Digite sua altura (metros): "))
-valor_IMC(massa, altura)
+# massa : float = float(input("Digite sua massa (KG): "))
+# altura : float = float(input("Digite sua altura (metros): "))
+#valor_IMC(massa, altura)
 
 # EX.2: Uma determinada loja de varejo classifica seus produtos utilizando códigos conforme descrito na tabela abaixo.
 # Elabore um algoritmo que leia o código de um produto e mostre sua classificação. Para qualquer código inexistente, mostre “Código inválido”.
@@ -52,8 +52,8 @@ def classificacao_produto(codigo: int) -> None:
     else:
         print("Código Inválido")
         
-codigo : int = int(input("Digite o valor do código de identificação do produto (inteiro): "))
-classificacao_produto(codigo)
+#codigo : int = int(input("Digite o valor do código de identificação do produto (inteiro): "))
+#classificacao_produto(codigo)
 
 # EX.3: Construa um algoritmo que seja capaz de concluir qual dentre os seguintes animais fofi escoolhido, através de perguntas e respostas.
 # Animais possíveis: leão, cavalo, homem, macacoo, morcego, baleia, avestruz, pinguim, pato, águia, tartaruga, crocodilo e cobra.

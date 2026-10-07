@@ -121,11 +121,36 @@ def regra_dez(senha) -> bool:
 
 #REGRA 11: Precisa ter uma letra se repetindo exatamente 3x
 def regra_onze(senha) -> bool:
-    pass
+    for letra in senha.lower():
+        if letra.isalpha(): #só conta de for letra
+            contagem = senha.lower().count(letra)
+            #print(letra, contagem) TESTE
+            if contagem == 3:
+                print("Sua senha possui o mesmo caractere repetido pelo menos 3x! Passou na regra 11!\n")
+                return True
+    print("Erro na regra 11: a senha precisa conter o mesmo caractere exatamente 3x!\n")
+    return False
+    
+#regra_onze("Exatamente") TESTE
 
 #REGRA 12: Conter, pelo menos, 3 letras do seu nome
-def regra_doze(senha):
-    pass
+def regra_doze(nome, senha) -> bool:
+    contador : int = 0
+    ja_contadas : str = ""
+    for letra in nome.lower():
+        if letra.isalpha():
+            if letra in senha.lower() and letra not in ja_contadas:
+                contador += 1
+                ja_contadas += letra
+    #print(ja_contadas, contador) TESTE
+    if contador >= 3:
+        print("Sua senha possui pelo menos 3 letras diferentes do seu nome! Passou na regra 12!\n")
+        return True
+    else:
+        print("Erro na regra 12: a senha precisa conter pelo menos 3 letras diferentes do seu nome!\n")
+        return False
+
+#regra_doze("Gabriel", "senhasegura") TESTE
 
 # GAME LOOP
 def password_game() -> None:
@@ -134,6 +159,7 @@ def password_game() -> None:
     
     print("Bem vindo ao password game!\n".upper())
     print(f" **Número {rand_num} precisa estar na sua senha. Regra 7.**\n")
+    nome : str = str(input("Digite o seu primeiro nome: "))
     
     while not ganhou:
         senha = input("Digite a senha: ")
@@ -148,8 +174,8 @@ def password_game() -> None:
                                         if regra_nove(senha):
                                             if regra_dez(senha):
                                                 if regra_onze(senha):
-                                                    if regra_doze(senha):
+                                                    if regra_doze(nome, senha):
                                                         ganhou = True
     print("ganhou!!\n".upper())
 
-password_game()
+#password_game()

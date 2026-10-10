@@ -35,7 +35,7 @@ def regra_quatro(senha) -> bool:
         print("Sua senha tem um caractere especial! Passou na regra 4!\n")
         return True
     else:
-        print(f"Erro na regra quatro: a senha precisa ter um caracter especial!\n")
+        print(f"Erro na regra quatro: a senha precisa ter um caractere especial!\n")
         return False
 
 #REGRA 5: Os números precisam somar 25 (nem mais nem menos)
@@ -76,7 +76,7 @@ def regra_sete(rand_num, senha) -> bool:
         print("Sua senha contém o número gerado aleatoriamente! Passou na regra 7!\n")
         return True
     else:
-        print("Erro na regra 7: sua senha precisa conter o número aleatório mostrado anteriormente!\n")
+        print("Erro na regra 7: sua senha precisa conter o número sorteado!\n")
         return False
 
 #REGRA 8: Começa com uma letra e termina com um número
@@ -87,7 +87,7 @@ def regra_oito(senha) -> bool:
     if not senha[-1].isdigit():
         print("Erro na regra 8: o último caractere não é um número!\n")
         return False
-    print("O primeiro caracter é letra e o último é número! Passou na regra 8!\n")
+    print("O primeiro caractere é letra e o último é número! Passou na regra 8!\n")
     return True
 
 #REGRA 9: Conter o nome do mês do ano que estamos
@@ -103,7 +103,7 @@ def regra_nove(senha) -> bool:
         print("Sua senha contém o mês no qual estamos! Passou na regra 9!\n")
         return True
     else:
-        print("Erro na regra 9: a senha precisa conter o NOME do mês atual!\n")
+        print("Erro na regra 9: a senha precisa conter o NOME do mês atual! (sem acentos)\n")
         return False
 
 #regra_nove("okjOUTUBRObbu") TESTE
@@ -126,7 +126,7 @@ def regra_onze(senha) -> bool:
             contagem = senha.lower().count(letra)
             #print(letra, contagem) TESTE
             if contagem == 3:
-                print("Sua senha possui o mesmo caractere repetido pelo menos 3x! Passou na regra 11!\n")
+                print("Sua senha possui o mesmo caractere repetido exatamente 3x! Passou na regra 11!\n")
                 return True
     print("Erro na regra 11: a senha precisa conter o mesmo caractere exatamente 3x!\n")
     return False
@@ -155,13 +155,19 @@ def regra_doze(nome, senha) -> bool:
 # GAME LOOP
 def password_game() -> None:
     ganhou : bool = False
+    is_regra_sete : bool = False
     rand_num = random.randint(11, 99)
     
     print("Bem vindo ao password game!\n".upper())
-    print(f" **Número {rand_num} precisa estar na sua senha. Regra 7.**\n")
-    nome : str = str(input("Digite o seu primeiro nome: "))
+    nome : str = (input("Digite o seu primeiro nome: "))
+    while len(nome) < 3:
+        print("Nome inválido! Precisa ter pelo menos 3 caracteres")
+        nome : str = (input("Digite o seu primeiro nome: "))
+        
     
     while not ganhou:
+        if is_regra_sete:
+            print(f" **Número {rand_num} precisa estar na sua senha. Regra 7.**\n")
         senha = input("Digite a senha: ")
         if regra_um(senha):
             if regra_dois(senha):
@@ -169,6 +175,7 @@ def password_game() -> None:
                     if regra_quatro(senha):
                         if regra_cinco(senha):
                             if regra_seis(senha):
+                                is_regra_sete = True
                                 if regra_sete(rand_num, senha):
                                     if regra_oito(senha):
                                         if regra_nove(senha):
@@ -176,6 +183,17 @@ def password_game() -> None:
                                                 if regra_onze(senha):
                                                     if regra_doze(nome, senha):
                                                         ganhou = True
-    print("ganhou!!\n".upper())
+    print(f"PARABÉNS, {nome}! Você conseguiu completar o jogo e sua senha é muito boa! Agora é só lembrar ela sempre!\n")        
 
-#password_game()
+jogar_de_novo : bool = True
+while jogar_de_novo:
+    password_game()
+    resposta : str = input("Gostaria de jogar de novo? (s/n): ").strip().lower()
+
+    while resposta[:1] not in ["s", "n"]:
+        print("Resposta inválida! Digite S ou N!")
+        resposta : str = input("Gostaria de jogar de novo? (s/n): ").strip().lower()
+    if resposta[0] == "s":
+        jogar_de_novo = True
+    else:
+        jogar_de_novo = False

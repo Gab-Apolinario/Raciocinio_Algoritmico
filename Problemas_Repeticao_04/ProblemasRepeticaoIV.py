@@ -147,8 +147,8 @@ def desenho_sete() -> None:
 
 def desenho_oito() -> None:
     for i in range(1, 7):
-        for j in range(1, 7):
-            if j == i:
+        for j in range(1, 7): #esquerda para direita
+            if j == i or j + i == 7: #está na diagonal principal OU na diagonal secundária
                 print(j, end = " ")
             else:
                 print(" ", end = " ")
@@ -165,18 +165,21 @@ def desenho_oito() -> None:
 # - 1 - 3 - 5 - 7
 
 def desenho_nove() -> None:    
-    for i in range(8):
+    for i in range(7):
         for j in range(8):
-            if i % 2 == 0:
-                if j % 2 != 0:
-                    print(j, end = " - ")
-            elif j % 2 == 0:
-                print(j, end = " ")
-            else:
-                print("-", end = " ")
+            if i % 2 == 0: #LINHA PAR
+                if j % 2 == 0: # j par -> printa " - "
+                    print("-", end = " ")
+                elif j % 2 != 0: # j impar -> printa "j"
+                    print(j, end = " ")
+            elif i % 2 != 0: #LINHA IMPAR
+                if j % 2 == 0:
+                    print(j, end = " ")
+                elif j % 2 != 0:
+                    print("-", end = " ")
         print()
         
-desenho_nove()
+#desenho_nove()
 
 # EX.10: Elabore um algoritmo que imprima:
 # 9 8 7 6 5 4 3 2 1
@@ -234,10 +237,11 @@ def desenho_dez() -> None:
 # 1 2 3 4 5 6 7 8 9
 
 def desenho_onze() -> None:
-    for i in range(1, 10):
-        for j in range(1, 10):
-            if j <= i:
-                print(j, end = " ")
+    for blocos in range(1, 10):
+        for linha in range(1, blocos + 1):
+            for num in range(1, linha + 1):
+                print(num, end = " ")
+            print()
         print()
 
-desenho_onze()
+#desenho_onze()

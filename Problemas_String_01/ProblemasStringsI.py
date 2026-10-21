@@ -148,4 +148,88 @@ def separacao_palavras(frase: str) -> None:
         print(f"Palavra {contador}: {palavra} ({len(palavra)} letras)")
         contador += 1
 
-separacao_palavras("Joaquim Maria Machado de Assis")
+#separacao_palavras("Joaquim Maria Machado de Assis")
+
+# EX.7: Leia uma string do usuário e mostre-a novamente de modo que todas as palavras com 3 ou mais 
+# caracteres tenham a letra inicial trocada com a letra final.
+
+def trocar_letras(frase: str) -> None:
+    palavra_atual : str = ""
+    palavras : list = []
+    
+    for letra in frase:
+        if letra.isspace():
+            palavras.append(palavra_atual)
+            palavra_atual = ""
+        else:
+            palavra_atual += letra
+    palavras.append(palavra_atual)
+
+    for palavra in palavras:
+        if len(palavra) >= 3:
+            print(f"{palavra[-1]}{palavra[1:-1]}{palavra[0]} ", end = "")
+        else:
+            print(f"{palavra} ", end = "")
+
+#trocar_letras("Que bom que hoje é sexta")
+
+# EX.8: Leia uma string do usuário e verifique se é uma frase palíndroma, ou seja, uma frase que se lida de trás 
+# para a frente mantém o sentido (desconsidere letras acentuadas, espaços e demais caracteres especiais):
+# Exemplos de palíndromos para teste: “mega bobagem”, “O galo ama o lago”
+
+def palindromo(frase: str) -> None:
+    frase_crescente : str = ""
+    frase_decrescente : str = ""
+    
+    com_acento : str = "áàâãéêíóôõúç"
+    sem_acento : str = "aaaaeeiooouc"
+    
+    #adiciona as letras na variável crescente
+    for letra in frase.lower():
+        if letra.isalpha(): #só caracteres (sem espaços, dígitos e caracteres especiais)
+            if letra in com_acento:
+                letra = sem_acento[com_acento.index(letra)]
+            frase_crescente += letra
+            
+    #adiciona as letras na variável decrescente
+    '''posteriormente a IA me mostrou que existe uma forma mais fácil de
+       inverter a frase, usando frase_crescente = frase_crescente[::-1]'''
+    
+    for i in range(len(frase_crescente) - 1, -1, -1):
+        frase_decrescente += frase_crescente[i]
+
+    #valida
+    if frase_crescente == frase_decrescente:
+        print(f"SIM! A frase '{frase}' é um palíndromo! ")
+    else:
+        print(f"NÃO! A frase '{frase}' não é um palíndromo! ")
+        
+    #print(frase_crescente) TESTE
+    #print(frase_decrescente) TESTE
+    
+#palindromo("mega bobagem")
+#palindromo("O galo ama o lago")
+#palindromo("Seco de raiva, coloco no colo caviar e doces")
+
+# EX.9: Leia  uma  string  do  usuário  e  monte  e  mostre  uma  nova  string  com  as  
+# palavras  da  string  original  em  outra  ordem, embaralhadas aleatoriamente.
+
+import random
+def aleatorizar_palavras(frase: str) -> None:
+    palavra_atual : str = ""
+    palavras : list = []
+    
+    for letra in frase:
+        if not letra.isspace():
+            palavra_atual += letra
+        else:
+            palavras.append(palavra_atual)
+            palavra_atual = ""
+    palavras.append(palavra_atual)
+    
+    while len(palavras) > 0:
+        i = random.randint(0, len(palavras) - 1)
+        palavra = palavras.pop(i)
+        print(f"{palavra} ", end = "")
+        
+aleatorizar_palavras("Programar em Python é bom demais")

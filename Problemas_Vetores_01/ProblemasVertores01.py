@@ -87,10 +87,11 @@ print(f"O número {pesquisar} está no vetor: {existe_num}")
 # Adicione o uso desta função ao programa principal dentro de um bloco if que testou se ele existe 
 # usando a função existe_numero.
 
-def posicao_numero(vetor: list, pesquisar: int) -> None:
+def posicao_numero(vetor: list, pesquisar: int) -> int:
     for i in range(len(vetor)):
         if vetor[i] == pesquisar:
-            return vetor[i]
+            return i
+    return -1
 
 
 if existe_num:
@@ -101,7 +102,7 @@ if existe_num:
 # valor inteiro para multiplicar num. A função devolve um novo vetor, com cada valor do vetor original multiplicado
 # pelo num(multiplicação por escalar). Adicione o uso da função ao programa principal.
 
-def multiplicar_numero(vetor: list, num : int) -> None:
+def multiplicar_numero(vetor: list, num : int) -> list:
     vetor_multiplicado = [0] * len(vetor)
     for i in range(len(vetor)):
         vetor_multiplicado[i] = vetor[i] * num
@@ -114,11 +115,10 @@ print(f"Vetor multiplicado pelo número {multiplicador}: {mul_num}")
 
 # EX.9: Adicione ao script anterior uma função chamada vetor_ao_quadrado que recebe um vetor de números inteiros
 # e devolve um novo vetor, com cada valor do vetor original elevado ao quadrado. Adicione o uuso desta função ao programa principal.
-import math
 def vetor_ao_quadrado(vetor: list) -> list:
     vetor_sqrt : list = [0] * len(vetor)
     for i in range(len(vetor)):
-        vetor_sqrt[i] = math.pow(vetor[i], 2)
+        vetor_sqrt[i] = vetor[i] ** 2
     return vetor_sqrt
 
 

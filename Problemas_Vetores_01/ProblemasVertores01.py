@@ -123,7 +123,7 @@ def vetor_ao_quadrado(vetor: list) -> list:
 
 
 vetor_quadrado = vetor_ao_quadrado(v)
-print(f"Vetor ao quadrado: {vetor_quadrado}")
+print(f"\nVetor ao quadrado: {vetor_quadrado}")
 
 # EX.10: Adicione ao script anterior uma função chamada contar_sinais que recebe um vetor de números inteiros
 # e devolve uma TUPLA contendo a quantidade de números negativos, a quantidade de zeros e a quantidade de números
@@ -169,7 +169,7 @@ def contar_paridade(vetor: list) -> tuple:
 
 
 paridades : tuple = contar_paridade(v)
-print(f"As quantidade de ímpares e pares do vetor são: {paridades}")
+print(f"\nA quantidade de ímpares e pares do vetor são: {paridades}")
 
 # EX.12.: Adicione ao script anterior uma função chamada contar_media que recebe um vetor de números inteiros e devolve
 # uma tupla contendo a quantidade de números menores, iguais ou superiores a média aritmética do conjunto (calculada usando
@@ -191,4 +191,8 @@ def contar_media(vetor: list) -> tuple:
 
 
 tupla_media = contar_media(v)
-print(f"Contagem dos valores menores, iguais e maiores que a média do vetor: {tupla_media}")
+print(f"\nContagem dos valores menores, iguais e maiores que a média do vetor: {tupla_media}\n\n")
+
+print("=======================================================")
+print(f"Você chegou ao final do programa, obrigado por testar!")
+print("=======================================================\n")

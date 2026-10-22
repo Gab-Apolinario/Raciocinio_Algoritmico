@@ -3,7 +3,7 @@ import random
 TEMAS : dict = {'Biomas': ["Amazonia", "Cerrado", "Caatinga", "Pantanal"],
                 'Solucao': ["Reciclagem", "Reflorestamento", "Energia Solar"]}
 
-VIDAS : int = 6
+vidas : int = 6
 
 # -------------------------------
 # TESTES
@@ -38,19 +38,30 @@ def mostrar_palavra(tracinhos: list): #printa palavra sem ser em formato de list
     print()
 
 
-def verificar_letra(letra_input: str) -> bool: #retorna se tem ou não a letra
-    if input_jogador.lower() in palavra_escolhida:
-        print("tem letra")
+def verificar_letra(input_jogador: str, palavra_escolhida: str) -> bool: #retorna se tem ou não a letra
+    if input_jogador.lower() in palavra_escolhida.lower():
+        print("tem letra") #teste, não aparece no jogo principal pois é chamado num if
         return True
     else:
-        print("não tem letra")
+        print("não tem letra") #teste, não aparece no jogo principal pois é chamado num if
         return False
+
+
+def adicionar_letra(tracinhos: list, palavra_escolhida: str, letra_input: str):
+    for i in range(len(palavra_escolhida)):
+        if palavra_escolhida[i].lower() == letra_input.lower():
+            tracinhos[i] = palavra_escolhida[i] #retorna letra original para pegar as iniciais maiúsculas
 
 
 tracinhos = gerar_tracinhos(palavra_escolhida)
 print(f"CATEGORIA SORTEADA: {categoria_escolhida}")
 print(f"PALAVRA SORTEADA: {palavra_escolhida}")
 mostrar_palavra(tracinhos)
-print("teste")
 input_jogador : str = str(input("Digite uma letra: "))
-verificar_letra(input_jogador)
+
+if verificar_letra(input_jogador, palavra_escolhida):
+    adicionar_letra(tracinhos, palavra_escolhida, input_jogador)
+else:
+    vidas -= 1
+    print(f"Vidas Restantes: {vidas}")
+mostrar_palavra(tracinhos)

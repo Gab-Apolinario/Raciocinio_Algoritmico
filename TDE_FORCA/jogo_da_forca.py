@@ -1,7 +1,9 @@
 import random
 
-TEMAS : dict = {'Biomas': ["Amazonia", "Cerrado", "Caatinga", "Pantanal"],
-                'Solucao': ["Reciclagem", "Reflorestamento", "Energia Solar"]}
+TEMAS : dict = {'Biomas': ["Amazonia", "Cerrado", "Caatinga", "Pantanal", "Mata Atlantica", "Manguezal", "Savana", "Tundra"],
+                'Solucao': ["Reciclagem", "Reflorestamento", "Energia Solar", "Compostagem", "Coleta Seletiva", "Biodiversidade", "Preservacao"],
+                'Animal Ameacado': ["Onca-pintada", "Mico-leao-dourado", "Arara-azul", "Tamandua-bandeira", "Lobo-guara", "Ariranha", "Peixe-boi"],
+                'Problema Ambiental': ["Desmatamento", "Queimada", "Poluicao", "Aquecimento Global", "Enchente", "Lixo Plastico"]}
 
 vidas : int = 6
 
@@ -17,12 +19,18 @@ vidas : int = 6
 list_temas = list(TEMAS) #retorna lista com as CHAVES do dict
 tam_temas = len(list_temas) #retorna quantidade de elementos nessa lista de chaves
 
-rand_tema = random.randint(0, tam_temas - 1) #sorteia um int até o comprimento da lista - 1
-categoria_escolhida = list_temas[rand_tema] #seleciona a sorteada
-tam_palavras = len(TEMAS[categoria_escolhida]) #retorna quantidade de elementos na lista dos VALORES da CHAVE escolhida
+def escolher_categoria() -> str:
+    rand_tema = random.randint(0, tam_temas - 1) #sorteia um int até o comprimento da lista - 1
+    categoria_escolhida = list_temas[rand_tema] #seleciona a sorteada
+    return categoria_escolhida
 
-rand_palavra = random.randint(0, tam_palavras - 1) #sorteia um int até o comprimento da lista de valores - 1
-palavra_escolhida = TEMAS[categoria_escolhida][rand_palavra] #seleciona a sorteada
+
+def escolher_palavra(categoria: str) -> str:
+    tam_palavras = len(TEMAS[categoria]) #retorna quantidade de elementos na lista dos VALORES da CHAVE escolhida
+    rand_palavra = random.randint(0, tam_palavras - 1) #sorteia um int até o comprimento da lista de valores - 1
+    palavra_escolhida = TEMAS[categoria][rand_palavra] #seleciona a sorteada
+    return palavra_escolhida
+
 
 def gerar_tracinhos(palavra) -> list:
     tracinhos = ["_"] * len(palavra)
@@ -40,10 +48,8 @@ def mostrar_palavra(tracinhos: list): #printa palavra sem ser em formato de list
 
 def verificar_letra(input_jogador: str, palavra_escolhida: str) -> bool: #retorna se tem ou não a letra
     if input_jogador.lower() in palavra_escolhida.lower():
-        print("tem letra") #teste, não aparece no jogo principal pois é chamado num if
         return True
     else:
-        print("não tem letra") #teste, não aparece no jogo principal pois é chamado num if
         return False
 
 
@@ -52,9 +58,10 @@ def adicionar_letra(tracinhos: list, palavra_escolhida: str, letra_input: str):
         if palavra_escolhida[i].lower() == letra_input.lower():
             tracinhos[i] = palavra_escolhida[i] #retorna letra original para pegar as iniciais maiúsculas
 
-
+categoria = escolher_categoria()
+palavra_escolhida = escolher_palavra(categoria)
 tracinhos = gerar_tracinhos(palavra_escolhida)
-print(f"CATEGORIA SORTEADA: {categoria_escolhida}")
+print(f"CATEGORIA SORTEADA: {categoria}")
 print(f"PALAVRA SORTEADA: {palavra_escolhida}")
 mostrar_palavra(tracinhos)
 input_jogador : str = str(input("Digite uma letra: "))

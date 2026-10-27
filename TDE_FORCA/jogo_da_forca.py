@@ -63,6 +63,18 @@ def adicionar_letra(tracinhos: list, palavra_escolhida: str, letra_input: str):
             tracinhos[i] = palavra_escolhida[i] # retorna letra original para pegar as iniciais maiúsculas
 
 
+def verificar_vitoria(tracinhos: list) -> bool:
+    if "_" not in tracinhos:
+        return True
+    return False
+
+
+def verificar_derrota(vidas: int) -> bool:
+    if vidas <= 0:
+        return True
+    return False
+
+
 # -------------------------------
 # LOOP JOGO
 # -------------------------------
@@ -73,6 +85,7 @@ perdeu : bool = False
 categoria = escolher_categoria()
 palavra_escolhida = escolher_palavra(categoria)
 tracinhos = gerar_tracinhos(palavra_escolhida)
+
 while not ganhou and not perdeu:
     mostrar_palavra(tracinhos)
     input_jogador : str = str(input("Digite uma letra: "))    
@@ -82,13 +95,10 @@ while not ganhou and not perdeu:
         adicionar_letra(tracinhos, palavra_escolhida, input_jogador)
     else:
         vidas -= 1
-        if vidas <= 0:
-            perdeu = True
-        else:
-            print(f"\nVidas Restantes: {vidas}\n")
     
-    if "_" not in tracinhos:
-        ganhou = True
+    perdeu = verificar_derrota(vidas)
+    ganhou = verificar_vitoria(tracinhos)
+    print(f"\nVIDAS RESTANTES: {vidas}")
 
 if ganhou:
     print("\nGANHOU")

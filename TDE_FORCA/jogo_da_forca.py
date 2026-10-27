@@ -16,19 +16,20 @@ vidas : int = 6
 # print(TEMAS.get("Animal"))
 # -------------------------------
 
-list_temas = list(TEMAS) #retorna lista com as CHAVES do dict
-tam_temas = len(list_temas) #retorna quantidade de elementos nessa lista de chaves
-
 def escolher_categoria() -> str:
-    rand_tema = random.randint(0, tam_temas - 1) #sorteia um int até o comprimento da lista - 1
-    categoria_escolhida = list_temas[rand_tema] #seleciona a sorteada
+    list_temas = list(TEMAS) # retorna lista com as CHAVES do dict
+    tam_temas = len(list_temas) # retorna quantidade de elementos nessa lista de chaves
+    rand_tema = random.randint(0, tam_temas - 1) # sorteia um int até o comprimento da lista - 1
+    categoria_escolhida = list_temas[rand_tema] # seleciona a sorteada
+    # print(f"CATEGORIA SORTEADA: {categoria_escolhida}")    # DEBUG
     return categoria_escolhida
 
 
 def escolher_palavra(categoria: str) -> str:
-    tam_palavras = len(TEMAS[categoria]) #retorna quantidade de elementos na lista dos VALORES da CHAVE escolhida
-    rand_palavra = random.randint(0, tam_palavras - 1) #sorteia um int até o comprimento da lista de valores - 1
-    palavra_escolhida = TEMAS[categoria][rand_palavra] #seleciona a sorteada
+    tam_palavras = len(TEMAS[categoria]) # retorna quantidade de elementos na lista dos VALORES da CHAVE escolhida
+    rand_palavra = random.randint(0, tam_palavras - 1) # sorteia um int até o comprimento da lista de valores - 1
+    palavra_escolhida = TEMAS[categoria][rand_palavra] # seleciona a sorteada
+    # print(f"PALAVRA SORTEADA: {palavra_escolhida}")   # DEGUB
     return palavra_escolhida
 
 
@@ -40,13 +41,16 @@ def gerar_tracinhos(palavra) -> list:
     return tracinhos
 
 
-def mostrar_palavra(tracinhos: list): #printa palavra sem ser em formato de lista
+def mostrar_palavra(tracinhos: list): # printa palavra sem ser em formato de lista
+    print(f"CATEGORIA: {categoria}")
+    print()
+    print("Palavra: ", end = " ")
     for i in range(len(tracinhos)):
         print(tracinhos[i], end = "")
     print()
 
 
-def verificar_letra(input_jogador: str, palavra_escolhida: str) -> bool: #retorna se tem ou não a letra
+def verificar_letra(input_jogador: str, palavra_escolhida: str) -> bool: # retorna se tem ou não a letra
     if input_jogador.lower() in palavra_escolhida.lower():
         return True
     else:
@@ -56,19 +60,39 @@ def verificar_letra(input_jogador: str, palavra_escolhida: str) -> bool: #retorn
 def adicionar_letra(tracinhos: list, palavra_escolhida: str, letra_input: str):
     for i in range(len(palavra_escolhida)):
         if palavra_escolhida[i].lower() == letra_input.lower():
-            tracinhos[i] = palavra_escolhida[i] #retorna letra original para pegar as iniciais maiúsculas
+            tracinhos[i] = palavra_escolhida[i] # retorna letra original para pegar as iniciais maiúsculas
+
+
+# -------------------------------
+# LOOP JOGO
+# -------------------------------
+
+ganhou : bool = False
+perdeu : bool = False
 
 categoria = escolher_categoria()
 palavra_escolhida = escolher_palavra(categoria)
 tracinhos = gerar_tracinhos(palavra_escolhida)
-print(f"CATEGORIA SORTEADA: {categoria}")
-print(f"PALAVRA SORTEADA: {palavra_escolhida}")
-mostrar_palavra(tracinhos)
-input_jogador : str = str(input("Digite uma letra: "))
+while not ganhou and not perdeu:
+    mostrar_palavra(tracinhos)
+    input_jogador : str = str(input("Digite uma letra: "))    
 
-if verificar_letra(input_jogador, palavra_escolhida):
-    adicionar_letra(tracinhos, palavra_escolhida, input_jogador)
+    # Verificação de Estado
+    if verificar_letra(input_jogador, palavra_escolhida):
+        adicionar_letra(tracinhos, palavra_escolhida, input_jogador)
+    else:
+        vidas -= 1
+        if vidas <= 0:
+            perdeu = True
+        else:
+            print(f"\nVidas Restantes: {vidas}\n")
+    
+    if "_" not in tracinhos:
+        ganhou = True
+
+if ganhou:
+    print("\nGANHOU")
+    print(f"A palavra era: {palavra_escolhida}")
 else:
-    vidas -= 1
-    print(f"Vidas Restantes: {vidas}")
-mostrar_palavra(tracinhos)
+    print("\nPERDEU")
+    print(f"A palavra era: {palavra_escolhida}")

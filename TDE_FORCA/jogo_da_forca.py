@@ -41,7 +41,7 @@ def gerar_tracinhos(palavra) -> list:
     return tracinhos
 
 
-def mostrar_palavra(tracinhos: list): # printa palavra sem ser em formato de lista
+def mostrar_palavra(categoria: str, tracinhos: list): # printa palavra sem ser em formato de lista
     print(f"CATEGORIA: {categoria}")
     print()
     print("Palavra: ", end = " ")
@@ -51,16 +51,27 @@ def mostrar_palavra(tracinhos: list): # printa palavra sem ser em formato de lis
 
 
 def verificar_letra(input_jogador: str, palavra_escolhida: str) -> bool: # retorna se tem ou não a letra
-    if input_jogador.lower() in palavra_escolhida.lower():
+    if input_jogador in palavra_escolhida.lower():
         return True
     else:
         return False
 
 
+def registrar_letra(input_jogador: str, testadas: list) -> None:
+    if input_jogador not in testadas:
+        testadas.append(input_jogador)
+
+
 def adicionar_letra(tracinhos: list, palavra_escolhida: str, letra_input: str):
     for i in range(len(palavra_escolhida)):
-        if palavra_escolhida[i].lower() == letra_input.lower():
+        if palavra_escolhida[i].lower() == letra_input:
             tracinhos[i] = palavra_escolhida[i] # retorna letra original para pegar as iniciais maiúsculas
+
+
+def mostrar_usadas(testadas: list) -> None:
+    print("\nLetras já tentadas:", end = " ")
+    for i in range(len(testadas)):
+        print(testadas[i], end = " - ")
 
 
 def verificar_vitoria(tracinhos: list) -> bool:
@@ -85,17 +96,24 @@ perdeu : bool = False
 categoria = escolher_categoria()
 palavra_escolhida = escolher_palavra(categoria)
 tracinhos = gerar_tracinhos(palavra_escolhida)
+testadas : list = []
 
 while not ganhou and not perdeu:
-    mostrar_palavra(tracinhos)
-    input_jogador : str = str(input("Digite uma letra: "))    
-
-    # Verificação de Estado
-    if verificar_letra(input_jogador, palavra_escolhida):
-        adicionar_letra(tracinhos, palavra_escolhida, input_jogador)
-    else:
-        vidas -= 1
+    mostrar_palavra(categoria, tracinhos)
     
+    input_jogador : str = str(input("Digite uma letra: ").lower()) 
+    
+    print("\n-----------------------------------------")
+    if input_jogador in testadas:
+        print("\nLetra já verificada anteriormente!")
+    else:
+        registrar_letra(input_jogador, testadas)
+        if verificar_letra(input_jogador, palavra_escolhida):
+            adicionar_letra(tracinhos, palavra_escolhida, input_jogador)
+        else:
+            vidas -= 1
+    
+    mostrar_usadas(testadas)
     perdeu = verificar_derrota(vidas)
     ganhou = verificar_vitoria(tracinhos)
     print(f"\nVIDAS RESTANTES: {vidas}")

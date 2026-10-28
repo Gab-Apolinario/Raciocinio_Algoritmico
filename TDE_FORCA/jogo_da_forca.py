@@ -1,5 +1,78 @@
 import random
 
+ARVORE : list = [r'''
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                              .                             
+                           .-"-.                           
+,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.''',
+r'''
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                             \ /                            
+                              |                             
+,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.''',
+r'''
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                             \|/                            
+                            \_|_/                           
+                              |                             
+                              |                             
+,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.''',
+r'''
+                                                            
+                                                            
+                                                            
+                           ,@%@@@,                          
+                         @@%@@@@@%@@                        
+                         @@@%@@@@%@@                        
+                           `@@%@@'                          
+                             |||                            
+                             |||                            
+                            /|||\                           
+,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.''',
+r'''
+                                                            
+                          ,@%@@@@%,                         
+                       @@%@@@@@%@@@@%@                      
+                     @@@%@@@@%@@@@@%@@@@                    
+                     @@@%@@@@@%@@@@%@@@@                    
+                       @@@@%@@@@%@@@@@                      
+                          `@@@%@@@'                         
+                            \|||/                           
+                             |||                            
+                  *         /|||\           *               
+,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.''',
+r'''
+                         ,@%@@@@%@@,                        
+    v                @@%@@@@@%@o@@%@@@@@            v       
+       v          @@@%@@o@%@@@@@%@@@@%@@@@@                 
+                 @@@%@@@@@%@@@@%@@@@o%@@@@%@                
+                 @@@o%@@@@%@@@@@%@@@@%@@o@@%                
+                   @@@@%@@@@o%@@@o%@@@@@%@                  
+                      `@@@@%@@@@%@@@@@'                     
+                            \|||/                           
+        *                    |||                   *        
+          *     *     \|/   /|||\   \|/     *     *         
+,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.,^'.,,.'^.,'.''']
+
 TEMAS : dict = {'Biomas': ["Amazonia", "Cerrado", "Caatinga", "Pantanal", "Mata Atlantica", "Manguezal", "Savana", "Tundra"],
                 'Solucao': ["Reciclagem", "Reflorestamento", "Energia Solar", "Compostagem", "Coleta Seletiva", "Biodiversidade", "Preservacao"],
                 'Animal Ameacado': ["Onca-pintada", "Mico-leao-dourado", "Arara-azul", "Tamandua-bandeira", "Lobo-guara", "Ariranha", "Peixe-boi"],
@@ -43,7 +116,7 @@ def gerar_tracinhos(palavra_escolhida: str) -> list: # var tracinhos como lista 
 
 
 def mostrar_palavra(categoria: str, tracinhos: list): # printa palavra sem ser em formato de lista
-    print(f"CATEGORIA: {categoria}\n") # visual
+    print(f"\nCATEGORIA: {categoria}\n") # visual
     print("Palavra: ", end = " ") # visual
     for i in range(len(tracinhos)):
         print(tracinhos[i], end = "") # visual -> mais bonito de mostrar do que com ['_']
@@ -132,6 +205,11 @@ def estagio_arte(contador_letras: int, tracinhos: list) -> int:
     return estagio_ascii
     
 
+def desenhar_ascii(estagio_ascii: int, ARVORE: list) -> None:
+    pos_desenho = ARVORE[estagio_ascii]
+    print(pos_desenho)
+
+
 # -------------------------------
 # LOOP JOGO
 # -------------------------------
@@ -143,9 +221,12 @@ categoria = escolher_categoria()
 palavra_escolhida = escolher_palavra(categoria)
 tracinhos = gerar_tracinhos(palavra_escolhida)
 testadas : list = []
-contador_letras = contar_letras(palavra_escolhida)
+contador_letras = contar_letras(palavra_escolhida) #chamado uma vez pois só sorteia a palavra uma vez
 
 while not ganhou and not perdeu:
+    estagio_ascii = estagio_arte(contador_letras, tracinhos)
+    desenhar_ascii(estagio_ascii, ARVORE)
+    
     mostrar_palavra(categoria, tracinhos)
     
     input_jogador : str = str(input("Digite uma letra: ").lower())
@@ -155,7 +236,6 @@ while not ganhou and not perdeu:
     
     input_jogador = remover_acento(input_jogador)
         
-    print("\n-----------------------------------------")
     if input_jogador in testadas:
         print("\nLetra já verificada anteriormente!")
     else:
@@ -165,12 +245,14 @@ while not ganhou and not perdeu:
         else:
             vidas -= 1
     
+    print("\n-----------------------------------------")
     mostrar_usadas(testadas)
+    print(f"\nVIDAS RESTANTES: {vidas}/{VIDAS_MAX}")
     perdeu = verificar_derrota(vidas)
     ganhou = verificar_vitoria(tracinhos)
-    print(f"\nVIDAS RESTANTES: {vidas}/{VIDAS_MAX}")
 
 if ganhou:
+    desenhar_ascii(5, ARVORE)
     print("\nGANHOU")
     print(f"A palavra era: {palavra_escolhida}")
 else:

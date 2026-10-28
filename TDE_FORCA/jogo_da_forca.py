@@ -57,6 +57,12 @@ def verificar_letra(input_jogador: str, palavra_escolhida: str) -> bool: # retor
         return False
 
 
+def validar_letra(input_jogador: str) -> bool:
+    if input_jogador.isalpha() and len(input_jogador) <= 1:
+        return True
+    return False
+
+
 def registrar_letra(input_jogador: str, testadas: list) -> None:
     if input_jogador not in testadas:
         testadas.append(input_jogador)
@@ -102,7 +108,10 @@ while not ganhou and not perdeu:
     mostrar_palavra(categoria, tracinhos)
     
     input_jogador : str = str(input("Digite uma letra: ").lower()) 
-    
+    while not validar_letra(input_jogador):
+        print("Caractere inválido. Por favor digita apenas uma letra.")
+        input_jogador : str = str(input("Digite uma letra: ").lower()) 
+        
     print("\n-----------------------------------------")
     if input_jogador in testadas:
         print("\nLetra já verificada anteriormente!")
@@ -116,7 +125,7 @@ while not ganhou and not perdeu:
     mostrar_usadas(testadas)
     perdeu = verificar_derrota(vidas)
     ganhou = verificar_vitoria(tracinhos)
-    print(f"\nVIDAS RESTANTES: {vidas}")
+    print(f"\nVIDAS RESTANTES: {vidas}/6")
 
 if ganhou:
     print("\nGANHOU")

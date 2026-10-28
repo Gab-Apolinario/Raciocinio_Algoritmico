@@ -7,6 +7,7 @@ TEMAS : dict = {'Biomas': ["Amazonia", "Cerrado", "Caatinga", "Pantanal", "Mata 
 
 VIDAS_MAX : int = 6
 vidas : int = VIDAS_MAX
+
 # -------------------------------
 # TESTES
 # -------------------------------
@@ -33,7 +34,7 @@ def escolher_palavra(categoria: str) -> str:
     return palavra_escolhida
 
 
-def gerar_tracinhos(palavra) -> list:
+def gerar_tracinhos(palavra) -> list: # var tracinhos como lista de '_' já convertendo espaços e hífen
     tracinhos = ["_"] * len(palavra)
     for i in range(len(palavra)):
         if palavra[i] == " " or palavra[i] == "-":
@@ -42,55 +43,55 @@ def gerar_tracinhos(palavra) -> list:
 
 
 def mostrar_palavra(categoria: str, tracinhos: list): # printa palavra sem ser em formato de lista
-    print(f"CATEGORIA: {categoria}\n")
-    print("Palavra: ", end = " ")
+    print(f"CATEGORIA: {categoria}\n") # visual
+    print("Palavra: ", end = " ") # visual
     for i in range(len(tracinhos)):
-        print(tracinhos[i], end = "")
+        print(tracinhos[i], end = "") # visual -> mais bonito de mostrar do que com ['_']
     print()
 
 
-def verificar_letra(input_jogador: str, palavra_escolhida: str) -> bool: # retorna se tem ou não a letra
+def verificar_letra(input_jogador: str, palavra_escolhida: str) -> bool: # retorna se tem a letra na palavra sorteada
     if input_jogador in palavra_escolhida.lower():
         return True
     else:
         return False
 
 
-def validar_letra(input_jogador: str) -> bool:
-    if input_jogador.isalpha() and len(input_jogador) <= 1:
+def validar_letra(input_jogador: str) -> bool: # usada para validar input do jogador
+    if input_jogador.isalpha() and len(input_jogador) <= 1: # é caractere alpha e só tem um caractere
         return True
     return False
 
 
-def remover_acento(input_jogador: str) -> str:
+def remover_acento(input_jogador: str) -> str: # como .isalpha() permite acentos, função remove para respeitar regra do jogo
     com_acento : str = "áàâãéêíóôõúç"
     sem_acento : str = "aaaaeeiooouc"
     
     if input_jogador in com_acento:
-        pos = com_acento.index(input_jogador)
-        input_jogador = sem_acento[pos]    
+        pos = com_acento.index(input_jogador) # registra posição na string com_acento para usar na substituição
+        input_jogador = sem_acento[pos] # substitui
     return input_jogador
 
 
-def registrar_letra(input_jogador: str, testadas: list) -> None:
+def registrar_letra(input_jogador: str, testadas: list) -> None: # adiciona na lista de letras já registradas
     if input_jogador not in testadas:
         testadas.append(input_jogador)
 
 
-def adicionar_letra(tracinhos: list, palavra_escolhida: str, letra_input: str):
+def adicionar_letra(tracinhos: list, palavra_escolhida: str, input_jogador: str): # em tracinhos -> substitui '_' pela letra
     for i in range(len(palavra_escolhida)):
-        if palavra_escolhida[i].lower() == letra_input:
+        if palavra_escolhida[i].lower() == input_jogador:
             tracinhos[i] = palavra_escolhida[i] # retorna letra original para pegar as iniciais maiúsculas
 
 
-def mostrar_usadas(testadas: list) -> None:
+def mostrar_usadas(testadas: list) -> None: # visual
     print("\nLetras já tentadas:", end = " ")
     for i in range(len(testadas)):
         print(testadas[i], end = " - ")
 
 
 def verificar_vitoria(tracinhos: list) -> bool:
-    if "_" not in tracinhos:
+    if "_" not in tracinhos: # se não tem mais '_' -> acertou tudo
         return True
     return False
 

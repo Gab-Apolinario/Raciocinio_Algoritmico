@@ -210,6 +210,30 @@ def desenhar_ascii(estagio_ascii: int, ARVORE: list) -> None:
     print(pos_desenho)
 
 
+def secar_arvore(estagio_ascii: int, ARVORE: list) -> None: # chamada ao perder o jogo
+    folhas = ["@", "%", "o"]
+    desenho : str = ARVORE[estagio_ascii]
+    desenho_list : list = list(desenho) # transforma em lista para poder substituir os caracteres
+    posicoes : list = [] #folhas -> len(posicoes) = quantidade de folhas no desenho
+    
+    # conta quantas folhas tem no desenho
+    for i in range(len(desenho)):
+        if desenho[i] in folhas:
+            posicoes.append(i) # guarda a POSIÇÃO
+    
+    for num in posicoes:
+        desenho_list[num] = " " # substitui por espaço para manter alinhamento nas posições que já sabe que são folhas
+
+    print("".join(desenho_list)) # junta de novo numa string
+    print(f"Quantidade Folhas: {len(posicoes)}") # DEBUG
+    
+    if estagio_ascii >= 3 and estagio_ascii <= 5:
+        pass
+    else:
+        #print arte pronta
+        pass
+    
+    
 # -------------------------------
 # LOOP JOGO
 # -------------------------------
@@ -258,3 +282,4 @@ if ganhou:
 else:
     print("\nPERDEU")
     print(f"A palavra era: {palavra_escolhida}")
+    secar_arvore(estagio_ascii, ARVORE)

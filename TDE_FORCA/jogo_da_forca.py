@@ -103,6 +103,36 @@ def verificar_derrota(vidas: int) -> bool:
 
 
 # -------------------------------
+# ARTE
+# -------------------------------
+
+## Quantas letras o jogador precisa acertar?
+def contar_letras(palavra_escolhida: str) -> int:
+    contador_letras : int = 0
+    for i in range(len(palavra_escolhida)):
+        if palavra_escolhida[i] not in [" ", "-"]:
+            contador_letras += 1
+    #print(f"Palavra: {palavra_escolhida} | Tamanho: {len(palavra_escolhida)} | Contador: {contador_letras}") # DEBUG
+    return contador_letras
+
+
+def estagio_arte(contador_letras: int, tracinhos: list) -> int:
+    # contador_letras = 100%
+    contador_reveladas : int = 0
+    
+    # saber quantas já foram acertadas = fraçao
+    for letra in tracinhos:
+        if letra not in [" ", "-", "_"]:
+            contador_reveladas += 1
+    #print(f"Letras Reveladas: {contador_reveladas}") # DEBUG
+    
+    fracao : float = contador_reveladas / contador_letras
+    estagio_ascii : int = round(fracao * 5) # multiplica por 5 pois são 5 estágios, convertendo em round() para não ter decimal e com 1 acerto já virar 1 (não 0 como era com int())
+    #print(f"Estágio da Arte: {estagio_ascii}") # DEBUG
+    return estagio_ascii
+    
+
+# -------------------------------
 # LOOP JOGO
 # -------------------------------
 
@@ -113,6 +143,7 @@ categoria = escolher_categoria()
 palavra_escolhida = escolher_palavra(categoria)
 tracinhos = gerar_tracinhos(palavra_escolhida)
 testadas : list = []
+contador_letras = contar_letras(palavra_escolhida)
 
 while not ganhou and not perdeu:
     mostrar_palavra(categoria, tracinhos)

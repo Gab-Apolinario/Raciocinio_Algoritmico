@@ -5,8 +5,8 @@ TEMAS : dict = {'Biomas': ["Amazonia", "Cerrado", "Caatinga", "Pantanal", "Mata 
                 'Animal Ameacado': ["Onca-pintada", "Mico-leao-dourado", "Arara-azul", "Tamandua-bandeira", "Lobo-guara", "Ariranha", "Peixe-boi"],
                 'Problema Ambiental': ["Desmatamento", "Queimada", "Poluicao", "Aquecimento Global", "Enchente", "Lixo Plastico"]}
 
-vidas : int = 6
-
+VIDAS_MAX : int = 6
+vidas : int = VIDAS_MAX
 # -------------------------------
 # TESTES
 # -------------------------------
@@ -42,8 +42,7 @@ def gerar_tracinhos(palavra) -> list:
 
 
 def mostrar_palavra(categoria: str, tracinhos: list): # printa palavra sem ser em formato de lista
-    print(f"CATEGORIA: {categoria}")
-    print()
+    print(f"CATEGORIA: {categoria}\n")
     print("Palavra: ", end = " ")
     for i in range(len(tracinhos)):
         print(tracinhos[i], end = "")
@@ -61,6 +60,16 @@ def validar_letra(input_jogador: str) -> bool:
     if input_jogador.isalpha() and len(input_jogador) <= 1:
         return True
     return False
+
+
+def remover_acento(input_jogador: str) -> str:
+    com_acento : str = "áàâãéêíóôõúç"
+    sem_acento : str = "aaaaeeiooouc"
+    
+    if input_jogador in com_acento:
+        pos = com_acento.index(input_jogador)
+        input_jogador = sem_acento[pos]    
+    return input_jogador
 
 
 def registrar_letra(input_jogador: str, testadas: list) -> None:
@@ -107,10 +116,12 @@ testadas : list = []
 while not ganhou and not perdeu:
     mostrar_palavra(categoria, tracinhos)
     
-    input_jogador : str = str(input("Digite uma letra: ").lower()) 
+    input_jogador : str = str(input("Digite uma letra: ").lower())
     while not validar_letra(input_jogador):
-        print("Caractere inválido. Por favor digita apenas uma letra.")
+        print("Caractere inválido. Por favor digite apenas uma letra.")
         input_jogador : str = str(input("Digite uma letra: ").lower()) 
+    
+    input_jogador = remover_acento(input_jogador)
         
     print("\n-----------------------------------------")
     if input_jogador in testadas:
@@ -125,7 +136,7 @@ while not ganhou and not perdeu:
     mostrar_usadas(testadas)
     perdeu = verificar_derrota(vidas)
     ganhou = verificar_vitoria(tracinhos)
-    print(f"\nVIDAS RESTANTES: {vidas}/6")
+    print(f"\nVIDAS RESTANTES: {vidas}/{VIDAS_MAX}")
 
 if ganhou:
     print("\nGANHOU")

@@ -34,11 +34,11 @@ def escolher_palavra(categoria: str) -> str:
     return palavra_escolhida
 
 
-def gerar_tracinhos(palavra) -> list: # var tracinhos como lista de '_' já convertendo espaços e hífen
-    tracinhos = ["_"] * len(palavra)
-    for i in range(len(palavra)):
-        if palavra[i] == " " or palavra[i] == "-":
-            tracinhos[i] = palavra[i]
+def gerar_tracinhos(palavra_escolhida: str) -> list: # var tracinhos como lista de '_' já convertendo espaços e hífen
+    tracinhos = ["_"] * len(palavra_escolhida)
+    for i in range(len(palavra_escolhida)):
+        if palavra_escolhida[i] == " " or palavra_escolhida[i] == "-":
+            tracinhos[i] = palavra_escolhida[i]
     return tracinhos
 
 

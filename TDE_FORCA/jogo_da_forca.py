@@ -215,18 +215,30 @@ def secar_arvore(estagio_ascii: int, ARVORE: list) -> None: # chamada ao perder 
     desenho : str = ARVORE[estagio_ascii]
     desenho_list : list = list(desenho) # transforma em lista para poder substituir os caracteres
     posicoes : list = [] #folhas -> len(posicoes) = quantidade de folhas no desenho
-    
     # conta quantas folhas tem no desenho
     for i in range(len(desenho)):
         if desenho[i] in folhas:
             posicoes.append(i) # guarda a POSIÇÃO
     
-    for num in posicoes:
-        desenho_list[num] = " " # substitui por espaço para manter alinhamento nas posições que já sabe que são folhas
-
-    print("".join(desenho_list)) # junta de novo numa string
-    print(f"Quantidade Folhas: {len(posicoes)}") # DEBUG
+    #for num in posicoes: # percorre as posições das folhas
+    #    desenho_list[num] = " " # substitui por espaço para manter alinhamento nas posições que já sabe que são folhas
     
+    folhas_frame : int = len(posicoes) // 4 #total // frames
+    qntd_tirar : int = folhas_frame
+    for i in range(4): # FRAMES -> 4
+        # diminuir gradualmente
+        if i == 3: # se for o ultimo frame
+            qntd_tirar = len(posicoes) #tira todas as folhas restantes da divisão inteira em folhas_frame
+
+        for _ in range(qntd_tirar): # quantas folhas por frame
+            rand = random.randint(0, len(posicoes) - 1)
+            pos_substituir : int = posicoes[rand]
+            #percorre e substitui a taxa rand sorteada
+            desenho_list[pos_substituir] = " "
+            posicoes.pop(rand)
+        print("".join(desenho_list)) # junta de novo numa string
+        print(f"Quantidade Folhas: {len(posicoes)}") # DEBUG
+
     if estagio_ascii >= 3 and estagio_ascii <= 5:
         pass
     else:

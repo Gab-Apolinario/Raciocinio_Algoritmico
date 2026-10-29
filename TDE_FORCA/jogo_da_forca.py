@@ -1,4 +1,6 @@
 import random
+import time
+import os
 
 ARVORE : list = [r'''
                                                             
@@ -226,6 +228,7 @@ def secar_arvore(estagio_ascii: int, ARVORE: list) -> None: # chamada ao perder 
     folhas_frame : int = len(posicoes) // 4 #total // frames
     qntd_tirar : int = folhas_frame
     for i in range(4): # FRAMES -> 4
+        os.system("cls") # limpa o terminal
         # diminuir gradualmente
         if i == 3: # se for o ultimo frame
             qntd_tirar = len(posicoes) #tira todas as folhas restantes da divisão inteira em folhas_frame
@@ -236,9 +239,11 @@ def secar_arvore(estagio_ascii: int, ARVORE: list) -> None: # chamada ao perder 
             #percorre e substitui a taxa rand sorteada
             desenho_list[pos_substituir] = " "
             posicoes.pop(rand)
+            
         print("".join(desenho_list)) # junta de novo numa string
-        print(f"Quantidade Folhas: {len(posicoes)}") # DEBUG
-
+        #print(f"Quantidade Folhas: {len(posicoes)}") # DEBUG
+        time.sleep(0.7) # espera tempo entre frames
+        
     if estagio_ascii >= 3 and estagio_ascii <= 5:
         pass
     else:
@@ -246,6 +251,13 @@ def secar_arvore(estagio_ascii: int, ARVORE: list) -> None: # chamada ao perder 
         pass
     
     
+def crescer_arvore(ARVORE: list) -> None:
+    for frame in ARVORE:
+        os.system("cls")
+        print(frame)
+        time.sleep(0.7)
+
+
 # -------------------------------
 # LOOP JOGO
 # -------------------------------
@@ -288,10 +300,14 @@ while not ganhou and not perdeu:
     ganhou = verificar_vitoria(tracinhos)
 
 if ganhou:
-    desenhar_ascii(5, ARVORE)
-    print("\nGANHOU")
-    print(f"A palavra era: {palavra_escolhida}")
+    crescer_arvore(ARVORE)
+    print("\n-----------------------------------------")
+    print("\nPARABÉNS! VOCÊ ACERTOU A PALAVRA!")
+    print("\n-----------------------------------------")
+    print(f"A palavra era: {palavra_escolhida}\n")
 else:
-    print("\nPERDEU")
-    print(f"A palavra era: {palavra_escolhida}")
     secar_arvore(estagio_ascii, ARVORE)
+    print("\n-----------------------------------------")
+    print("\nPERDEU TODAS AS VIDAS!")
+    print("\n-----------------------------------------")
+    print(f"A palavra era: {palavra_escolhida}\n")

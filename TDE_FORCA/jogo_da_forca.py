@@ -230,15 +230,6 @@ TEMAS : dict = {'Biomas': ["Amazonia", "Cerrado", "Caatinga", "Pantanal", "Mata 
 VIDAS_MAX : int = 6
 vidas : int = VIDAS_MAX
 
-# -------------------------------
-# TESTES
-# -------------------------------
-# print(TEMAS)
-# print(list(TEMAS))
-# #print(TEMAS["Animal"])
-# print(TEMAS.get("Animal"))
-# -------------------------------
-
 def escolher_categoria() -> str:
     list_temas = list(TEMAS) # retorna lista com as CHAVES do dict
     tam_temas = len(list_temas) # retorna quantidade de elementos nessa lista de chaves
@@ -270,6 +261,15 @@ def mostrar_palavra(categoria: str, tracinhos: list): # printa palavra sem ser e
     for i in range(len(tracinhos)):
         print(tracinhos[i], end = "") # visual -> mais bonito de mostrar do que com ['_']
     print()
+
+
+def pedir_letra() -> str:
+    input_jogador : str = str(input("Digite uma letra: ").lower())
+    while not validar_letra(input_jogador):
+        print("Caractere inválido. Por favor digite apenas uma letra.")
+        input_jogador : str = str(input("Digite uma letra: ").lower())
+    input_jogador = remover_acento(input_jogador)
+    return input_jogador
 
 
 def verificar_letra(input_jogador: str, palavra_escolhida: str) -> bool: # retorna se tem a letra na palavra sorteada
@@ -423,16 +423,10 @@ contador_letras = contar_letras(palavra_escolhida) #chamado uma vez pois só sor
 
 while not ganhou and not perdeu:
     estagio_ascii = estagio_arte(contador_letras, tracinhos)
-    desenhar_ascii(estagio_ascii, ARVORE)
-    
+    desenhar_ascii(estagio_ascii, ARVORE) # mostra árvore no estágio 0
     mostrar_palavra(categoria, tracinhos)
     
-    input_jogador : str = str(input("Digite uma letra: ").lower())
-    while not validar_letra(input_jogador):
-        print("Caractere inválido. Por favor digite apenas uma letra.")
-        input_jogador : str = str(input("Digite uma letra: ").lower()) 
-    
-    input_jogador = remover_acento(input_jogador)
+    input_jogador = pedir_letra()
         
     if input_jogador in testadas:
         print("\nLetra já verificada anteriormente!")

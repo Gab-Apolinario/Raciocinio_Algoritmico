@@ -368,7 +368,7 @@ def estagio_arte(contador_letras: int, tracinhos: list) -> int:
     return estagio_ascii
     
 
-def desenhar_ascii(estagio_ascii: int, ARVORE: list) -> None:
+def desenhar_ascii(estagio_ascii: int) -> None:
     pos_desenho = ARVORE[estagio_ascii]
     print(pos_desenho)
 
@@ -402,7 +402,7 @@ def randomizar_secagem_folhas(desenho_estagio: str) -> list: # cria lista com a 
     return frames_secagem
 
 
-def secar_arvore(estagio_ascii: int, ARVORE: list) -> None:
+def secar_arvore(estagio_ascii: int) -> None:
     # Decide qual sequencia de ascii usar
     if estagio_ascii >= 3 and estagio_ascii <= 5:
         frames_secagem = randomizar_secagem_folhas(ARVORE[estagio_ascii])

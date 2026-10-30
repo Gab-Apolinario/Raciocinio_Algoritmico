@@ -223,7 +223,7 @@ r'''
 _.-/\_,-._/\-.__.-/\_,-._/\-.__.-/\_,-._/\-.__.-/\_,-._/\-._''']
 
 TEMAS : dict = {'Biomas': ["Amazonia", "Cerrado", "Caatinga", "Pantanal", "Mata Atlantica", "Manguezal", "Savana", "Tundra"],
-                'Solucao': ["Reciclagem", "Reflorestamento", "Energia Solar", "Compostagem", "Coleta Seletiva", "Biodiversidade", "Preservacao"],
+                'Solucao Ambiental': ["Reciclagem", "Reflorestamento", "Energia Solar", "Compostagem", "Coleta Seletiva", "Biodiversidade", "Preservacao"],
                 'Animal Ameacado': ["Onca-pintada", "Mico-leao-dourado", "Arara-azul", "Tamandua-bandeira", "Lobo-guara", "Ariranha", "Peixe-boi"],
                 'Problema Ambiental': ["Desmatamento", "Queimada", "Poluicao", "Aquecimento Global", "Enchente", "Lixo Plastico"]}
 
@@ -425,6 +425,26 @@ def animar_desenho(lista_desenho: list) -> None:
 # -------------------------------
 # LOOP JOGO
 # -------------------------------
+def contexto_jogo() -> None:
+    print("\nBEM VINDO, GUARDIÃO!\n")
+    print("Aqui sua missão é salvar a floresta da seca!\n")
+    time.sleep(2)
+    
+    print("Para isso, vamos sortear uma palavra dentro dos seguintes temas:")
+    
+    for tema in TEMAS:
+        print(f"  -> {tema}".upper())
+        time.sleep(0.8)
+
+    time.sleep(3)
+    print("\nVAMOS COMEÇAR EM...!")
+    time.sleep(0.5)
+    
+    for i in range(3, 0, -1):
+        print(f"{i}...")
+        time.sleep(1)
+
+
 def jogar() -> tuple:
     vidas : int = VIDAS_MAX
     ganhou : bool = False
@@ -436,6 +456,8 @@ def jogar() -> tuple:
     testadas : list = []
     contador_letras = contar_letras(palavra_escolhida) #chamado uma vez pois só sorteia a palavra uma vez
 
+    contexto_jogo()
+            
     while not ganhou and not perdeu:
         estagio_ascii = estagio_arte(contador_letras, tracinhos)
         desenhar_ascii(estagio_ascii) # mostra árvore no estágio atual
@@ -461,15 +483,15 @@ def finalizar_jogo(ganhou: bool, palavra_escolhida: str, estagio_ascii: int) -> 
     if ganhou:
         animar_desenho(ARVORE)
         print("\n-----------------------------------------")
-        print("\nPARABÉNS! VOCÊ ACERTOU A PALAVRA!")
+        print("\nPARABÉNS! VOCÊ ACERTOU A PALAVRA! E CONSEGUIU SALVAR A FLORESTA")
         print("\n-----------------------------------------")
-        print(f"A palavra era: {palavra_escolhida}\n")
+        print(f"\nA palavra era: {palavra_escolhida}\n")
     else:
         secar_arvore(estagio_ascii)
         print("\n-----------------------------------------")
-        print("\nPERDEU TODAS AS VIDAS!")
+        print("\nPERDEU TODAS AS VIDAS E A FLORESTA SECOU")
         print("\n-----------------------------------------")
-        print(f"A palavra era: {palavra_escolhida}\n")
+        print(f"\nA palavra era: {palavra_escolhida}\n")
 
 
 ganhou, palavra_escolhida, estagio_ascii = jogar()

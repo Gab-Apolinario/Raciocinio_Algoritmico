@@ -361,45 +361,45 @@ def desenhar_ascii(estagio_ascii: int, ARVORE: list) -> None:
 
 def secar_arvore(estagio_ascii: int, ARVORE: list) -> None: # chamada ao perder o jogo
     folhas = ["@", "%", "o"]
-    desenho : str = ARVORE[estagio_ascii]
-    desenho_list : list = list(desenho) # transforma em lista para poder substituir os caracteres
+    desenho : str = ARVORE[estagio_ascii] # pega o DESENHO do estágio atual para começar a secar
+    desenho_list : list = list(desenho) # transforma o DESENHO em lista para poder substituir os caracteres
     posicoes : list = [] #folhas -> len(posicoes) = quantidade de folhas no desenho
+    
     # conta quantas folhas tem no desenho
     for i in range(len(desenho)):
         if desenho[i] in folhas:
             posicoes.append(i) # guarda a POSIÇÃO
-    
-    #for num in posicoes: # percorre as posições das folhas
-    #    desenho_list[num] = " " # substitui por espaço para manter alinhamento nas posições que já sabe que são folhas
-    
-    folhas_frame : int = len(posicoes) // 4 #total // frames
-    qntd_tirar : int = folhas_frame
-    for i in range(4): # FRAMES -> 4
-        os.system("cls") # limpa o terminal
-        # diminuir gradualmente
-        if i == 3: # se for o ultimo frame
-            qntd_tirar = len(posicoes) #tira todas as folhas restantes da divisão inteira em folhas_frame
-
-        for _ in range(qntd_tirar): # quantas folhas por frame
-            rand = random.randint(0, len(posicoes) - 1)
-            pos_substituir : int = posicoes[rand]
-            #percorre e substitui a taxa rand sorteada
-            desenho_list[pos_substituir] = " "
-            posicoes.pop(rand)
             
-        print("".join(desenho_list)) # junta de novo numa string
-        #print(f"Quantidade Folhas: {len(posicoes)}") # DEBUG
-        time.sleep(0.7) # espera tempo entre frames
-        
+    # Decide qual sequencia de ascii usar -> Encapsular e devolver desenho
     if estagio_ascii >= 3 and estagio_ascii <= 5:
-        pass
+        folhas_frame : int = len(posicoes) // 4 #total // frames
+        qntd_tirar : int = folhas_frame
+        for i in range(4): # FRAMES -> 4
+            os.system("cls") # limpa o terminal
+            # diminuir gradualmente
+            if i == 3: # se for o ultimo frame
+                qntd_tirar = len(posicoes) #tira todas as folhas restantes da divisão inteira em folhas_frame
+    
+            for _ in range(qntd_tirar): # quantas folhas por frame
+                rand = random.randint(0, len(posicoes) - 1)
+                pos_substituir : int = posicoes[rand]
+                #percorre e substitui a taxa rand sorteada
+                desenho_list[pos_substituir] = " "
+                posicoes.pop(rand)
+                
+            print("".join(desenho_list)) # junta de novo numa string
+            #print(f"Quantidade Folhas: {len(posicoes)}") # DEBUG
+            time.sleep(0.7) # espera tempo entre frames
+    elif estagio_ascii == 0:
+        animar_desenho(MURCHAR_ESTAGIO_0)
+    elif estagio_ascii == 1:
+        animar_desenho(MURCHAR_ESTAGIO_1)
     else:
-        #print arte pronta
-        pass
+        animar_desenho(MURCHAR_ESTAGIO_2)
     
     
-def crescer_arvore(ARVORE: list) -> None:
-    for frame in ARVORE:
+def animar_desenho(lista_desenho: list) -> None:
+    for frame in lista_desenho:
         os.system("cls")
         print(frame)
         time.sleep(0.7)
@@ -447,7 +447,7 @@ while not ganhou and not perdeu:
     ganhou = verificar_vitoria(tracinhos)
 
 if ganhou:
-    crescer_arvore(ARVORE)
+    animar_desenho(ARVORE)
     print("\n-----------------------------------------")
     print("\nPARABÉNS! VOCÊ ACERTOU A PALAVRA!")
     print("\n-----------------------------------------")

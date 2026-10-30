@@ -231,7 +231,6 @@ VIDAS_MAX : int = 6
 ERRO : int = -1
 REPETIDA : int = 0
 ACERTO : int = 1
-vidas : int = VIDAS_MAX
 
 def escolher_categoria() -> str:
     list_temas = list(TEMAS) # retorna lista com as CHAVES do dict
@@ -426,44 +425,52 @@ def animar_desenho(lista_desenho: list) -> None:
 # -------------------------------
 # LOOP JOGO
 # -------------------------------
+def jogar() -> tuple:
+    vidas : int = VIDAS_MAX
+    ganhou : bool = False
+    perdeu : bool = False
 
-ganhou : bool = False
-perdeu : bool = False
+    categoria = escolher_categoria()
+    palavra_escolhida = escolher_palavra(categoria)
+    tracinhos = gerar_tracinhos(palavra_escolhida)
+    testadas : list = []
+    contador_letras = contar_letras(palavra_escolhida) #chamado uma vez pois só sorteia a palavra uma vez
 
-categoria = escolher_categoria()
-palavra_escolhida = escolher_palavra(categoria)
-tracinhos = gerar_tracinhos(palavra_escolhida)
-testadas : list = []
-contador_letras = contar_letras(palavra_escolhida) #chamado uma vez pois só sorteia a palavra uma vez
-
-while not ganhou and not perdeu:
-    estagio_ascii = estagio_arte(contador_letras, tracinhos)
-    desenhar_ascii(estagio_ascii, ARVORE) # mostra árvore no estágio atual
-    mostrar_palavra(categoria, tracinhos)
-    
-    input_jogador = pedir_letra()
-    resultado = processar_letra(input_jogador, testadas, palavra_escolhida, tracinhos)
-    
-    if resultado == ERRO:
-        vidas -= 1
-    elif resultado == REPETIDA:
-        print("\nLetra já verificada anteriormente!")
+    while not ganhou and not perdeu:
+        estagio_ascii = estagio_arte(contador_letras, tracinhos)
+        desenhar_ascii(estagio_ascii) # mostra árvore no estágio atual
+        mostrar_palavra(categoria, tracinhos)
         
-    print("\n-----------------------------------------")
-    mostrar_usadas(testadas)
-    print(f"\nVIDAS RESTANTES: {vidas}/{VIDAS_MAX}")
-    perdeu = verificar_derrota(vidas)
-    ganhou = verificar_vitoria(tracinhos)
+        input_jogador = pedir_letra()
+        resultado = processar_letra(input_jogador, testadas, palavra_escolhida, tracinhos)
+        
+        if resultado == ERRO:
+            vidas -= 1
+        elif resultado == REPETIDA:
+            print("\nLetra já verificada anteriormente!")
+            
+        print("\n-----------------------------------------")
+        mostrar_usadas(testadas)
+        print(f"\nVIDAS RESTANTES: {vidas}/{VIDAS_MAX}")
+        perdeu = verificar_derrota(vidas)
+        ganhou = verificar_vitoria(tracinhos)
+    return ganhou, palavra_escolhida, estagio_ascii
 
-if ganhou:
-    animar_desenho(ARVORE)
-    print("\n-----------------------------------------")
-    print("\nPARABÉNS! VOCÊ ACERTOU A PALAVRA!")
-    print("\n-----------------------------------------")
-    print(f"A palavra era: {palavra_escolhida}\n")
-else:
-    secar_arvore(estagio_ascii, ARVORE)
-    print("\n-----------------------------------------")
-    print("\nPERDEU TODAS AS VIDAS!")
-    print("\n-----------------------------------------")
-    print(f"A palavra era: {palavra_escolhida}\n")
+
+def finalizar_jogo(ganhou: bool, palavra_escolhida: str, estagio_ascii: int) -> None:
+    if ganhou:
+        animar_desenho(ARVORE)
+        print("\n-----------------------------------------")
+        print("\nPARABÉNS! VOCÊ ACERTOU A PALAVRA!")
+        print("\n-----------------------------------------")
+        print(f"A palavra era: {palavra_escolhida}\n")
+    else:
+        secar_arvore(estagio_ascii)
+        print("\n-----------------------------------------")
+        print("\nPERDEU TODAS AS VIDAS!")
+        print("\n-----------------------------------------")
+        print(f"A palavra era: {palavra_escolhida}\n")
+
+
+ganhou, palavra_escolhida, estagio_ascii = jogar()
+finalizar_jogo(ganhou, palavra_escolhida, estagio_ascii)

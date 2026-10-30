@@ -3,7 +3,7 @@ import time
 import os
 
 # -------------------------------
-# CONTANTES
+# CONSTANTES
 # -------------------------------
 
 ARVORE : list = [r'''
@@ -358,7 +358,7 @@ def verificar_derrota(vidas: int) -> bool:
 # ARTE
 # -------------------------------
 
-## Quantas letras o jogador precisa acertar?
+# Quantas letras o jogador precisa acertar?
 def contar_letras(palavra_escolhida: str) -> int:
     contador_letras : int = 0
     for i in range(len(palavra_escolhida)):
@@ -441,6 +441,7 @@ def animar_desenho(lista_desenho: list) -> None:
 # -------------------------------
 # LOOP JOGO
 # -------------------------------
+
 def contexto_jogo() -> None:
     print("\nBEM VINDO, GUARDIÃO!\n")
     print("Aqui sua missão é salvar a floresta da seca!\n")
@@ -471,8 +472,6 @@ def jogar() -> tuple:
     tracinhos = gerar_tracinhos(palavra_escolhida)
     testadas : list = []
     contador_letras = contar_letras(palavra_escolhida) #chamado uma vez pois só sorteia a palavra uma vez
-
-    contexto_jogo()
             
     while not ganhou and not perdeu:
         estagio_ascii = estagio_arte(contador_letras, tracinhos)
@@ -505,10 +504,31 @@ def finalizar_jogo(ganhou: bool, palavra_escolhida: str, estagio_ascii: int) -> 
     else:
         secar_arvore(estagio_ascii)
         print("\n-----------------------------------------")
-        print("\nPERDEU TODAS AS VIDAS E A FLORESTA SECOU")
+        print("\nPERDEU TODAS AS VIDAS E A FLORESTA SECOU!")
         print("\n-----------------------------------------")
         print(f"\nA palavra era: {palavra_escolhida}\n")
 
 
-ganhou, palavra_escolhida, estagio_ascii = jogar()
-finalizar_jogo(ganhou, palavra_escolhida, estagio_ascii)
+def jogar_novamente() -> bool:
+    resposta = str(input("Deseja jogar novamente (s/n)? ").strip().lower())
+    while resposta not in ["s", "n"]:
+        print("Digite um caractere válido!")
+        resposta = str(input("Deseja jogar novamente (s/n)? ").strip().lower())
+    if resposta == "n":
+        return False
+    return True
+
+
+# -------------------------------
+# PARTIDA
+# -------------------------------
+
+repetir : bool = True #começa como True, então loop roda
+contexto_jogo()
+while repetir:
+    ganhou, palavra_escolhida, estagio_ascii = jogar()
+    finalizar_jogo(ganhou, palavra_escolhida, estagio_ascii)
+    repetir = jogar_novamente()
+    
+    if not repetir:
+        print("\nOBRIGADO POR JOGAR!\n")

@@ -2,6 +2,10 @@ import random
 import time
 import os
 
+# -------------------------------
+# CONTANTES
+# -------------------------------
+
 ARVORE : list = [r'''
                                                             
                                                             
@@ -232,6 +236,10 @@ ERRO : int = -1
 REPETIDA : int = 0
 ACERTO : int = 1
 
+# -------------------------------
+# SORTEIO DA PALAVRA
+# -------------------------------
+
 def escolher_categoria() -> str:
     list_temas = list(TEMAS) # retorna lista com as CHAVES do dict
     tam_temas = len(list_temas) # retorna quantidade de elementos nessa lista de chaves
@@ -257,12 +265,22 @@ def gerar_tracinhos(palavra_escolhida: str) -> list: # var tracinhos como lista 
     return tracinhos
 
 
+# -------------------------------
+# TELA E ENTRADA DO JOGADOR
+# -------------------------------
+
 def mostrar_palavra(categoria: str, tracinhos: list): # printa palavra sem ser em formato de lista
     print(f"\nCATEGORIA: {categoria}\n") # visual
     print("Palavra: ", end = " ") # visual
     for i in range(len(tracinhos)):
         print(tracinhos[i], end = "") # visual -> mais bonito de mostrar do que com ['_']
     print()
+
+
+def mostrar_usadas(testadas: list) -> None: # visual
+    print("\nLetras já tentadas:", end = " ")
+    for i in range(len(testadas)):
+        print(testadas[i], end = " - ")
 
 
 def pedir_letra() -> str:
@@ -273,6 +291,10 @@ def pedir_letra() -> str:
     input_jogador = remover_acento(input_jogador)
     return input_jogador
 
+
+# -------------------------------
+# REGRAS DO JOGO
+# -------------------------------
 
 def verificar_letra(input_jogador: str, palavra_escolhida: str) -> bool: # retorna se tem a letra na palavra sorteada
     if input_jogador in palavra_escolhida.lower():
@@ -306,12 +328,6 @@ def adicionar_letra(tracinhos: list, palavra_escolhida: str, input_jogador: str)
     for i in range(len(palavra_escolhida)):
         if palavra_escolhida[i].lower() == input_jogador:
             tracinhos[i] = palavra_escolhida[i] # retorna letra original para pegar as iniciais maiúsculas
-
-
-def mostrar_usadas(testadas: list) -> None: # visual
-    print("\nLetras já tentadas:", end = " ")
-    for i in range(len(testadas)):
-        print(testadas[i], end = " - ")
 
 
 def processar_letra(input_jogador: str, testadas: list, palavra_escolhida: str, tracinhos: list) -> int: # devolve ERRO, REPETIDA ou ACERTO

@@ -228,6 +228,9 @@ TEMAS : dict = {'Biomas': ["Amazonia", "Cerrado", "Caatinga", "Pantanal", "Mata 
                 'Problema Ambiental': ["Desmatamento", "Queimada", "Poluicao", "Aquecimento Global", "Enchente", "Lixo Plastico"]}
 
 VIDAS_MAX : int = 6
+ERRO : int = -1
+REPETIDA : int = 0
+ACERTO : int = 1
 vidas : int = VIDAS_MAX
 
 def escolher_categoria() -> str:
@@ -310,6 +313,18 @@ def mostrar_usadas(testadas: list) -> None: # visual
     print("\nLetras já tentadas:", end = " ")
     for i in range(len(testadas)):
         print(testadas[i], end = " - ")
+
+
+def processar_letra(input_jogador: str, testadas: list, palavra_escolhida: str, tracinhos: list) -> int: # devolve ERRO, REPETIDA ou ACERTO
+    if input_jogador in testadas:
+        return REPETIDA
+    else:
+        registrar_letra(input_jogador, testadas)
+        if verificar_letra(input_jogador, palavra_escolhida):
+            adicionar_letra(tracinhos, palavra_escolhida, input_jogador)
+            return ACERTO
+        else:
+            return ERRO
 
 
 def verificar_vitoria(tracinhos: list) -> bool:
@@ -423,20 +438,17 @@ contador_letras = contar_letras(palavra_escolhida) #chamado uma vez pois só sor
 
 while not ganhou and not perdeu:
     estagio_ascii = estagio_arte(contador_letras, tracinhos)
-    desenhar_ascii(estagio_ascii, ARVORE) # mostra árvore no estágio 0
+    desenhar_ascii(estagio_ascii, ARVORE) # mostra árvore no estágio atual
     mostrar_palavra(categoria, tracinhos)
     
     input_jogador = pedir_letra()
-        
-    if input_jogador in testadas:
-        print("\nLetra já verificada anteriormente!")
-    else:
-        registrar_letra(input_jogador, testadas)
-        if verificar_letra(input_jogador, palavra_escolhida):
-            adicionar_letra(tracinhos, palavra_escolhida, input_jogador)
-        else:
-            vidas -= 1
+    resultado = processar_letra(input_jogador, testadas, palavra_escolhida, tracinhos)
     
+    if resultado == ERRO:
+        vidas -= 1
+    elif resultado == REPETIDA:
+        print("\nLetra já verificada anteriormente!")
+        
     print("\n-----------------------------------------")
     mostrar_usadas(testadas)
     print(f"\nVIDAS RESTANTES: {vidas}/{VIDAS_MAX}")

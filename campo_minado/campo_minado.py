@@ -60,11 +60,28 @@ def sortear_matriz(tab: list, qntd_bombas: int, tam_tab: int):
     return tab
 
 
+def calcular_dicas(tab: list):
+    for linha in range(len(tab)): #percorre linhas
+        for coluna in range(len(tab[linha])): #percorre colunas
+            if tab[linha][coluna] == -1: #se a casa for bomba
+                for lin in range(-1, 2, 1):
+                    for col in range(-1, 2, 1):
+                        viz_lin = linha + lin #casa vizinha
+                        viz_col = coluna + col #casa vizinha
+                        if 0 <= viz_lin < len(tab) and 0 <= viz_col < len(tab[linha]): #ver se a casa existe. linha é >= 0 e < totalCasas. Coluna >= 0 e < totalColunas
+                            if tab[viz_lin][viz_col] != -1: #se NÃO é bomba, acrescenta
+                                tab[viz_lin][viz_col] += 1
+    return tab
+
+
 tam_tab = escolher_tamanho()
 tab = criar_matriz_tab(tam_tab)
 qntd_bombas = quantidade_bombas(tam_tab)
 mostrar_matriz(tab)
 sortear_matriz(tab, qntd_bombas, tam_tab)
 print()
+print()
+mostrar_matriz(tab)
+calcular_dicas(tab)
 print()
 mostrar_matriz(tab)

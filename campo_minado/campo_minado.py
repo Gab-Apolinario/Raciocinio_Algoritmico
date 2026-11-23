@@ -7,14 +7,18 @@ BANDEIRA : int = 100
 SEGURA : int = 2 #abriu uma casa sem bomba
 EXPLODIU : int = -2 #abriu uma bomba
 INVALIDA : int = 20 #casa já aberta ou com bandeira, nada muda
+ABRIR : int = 1000
+COLOCAR_BANDEIRA : int = 2000
+RETIRAR_BANDEIRA : int = 3000
 
 #pergunta o tamanho do tabuleiro e repete até a resposta ser válida
+#pergunta o tamanho do tabuleiro e repete até a resposta ser válida
 def escolher_tamanho():
-    tam_tab = int(input("Digite o tamanho do tabuleiro que quer jogar (9, 16 ou 30): "))
-    while tam_tab not in [9, 16, 30]:
+    tam_tab = input("Digite o tamanho do tabuleiro que quer jogar (9, 16 ou 30): ").strip()
+    while not tam_tab.isdecimal() or int(tam_tab) not in [9, 16, 30]: #valida se todos os dígitos são numeros e se está dentro dos permitidos
         print("Digite um tamanho válido!")
-        tam_tab = int(input("Digite o tamanho do tabuleiro que quer jogar (9, 16 ou 30): "))
-    return tam_tab
+        tam_tab = input("Digite o tamanho do tabuleiro que quer jogar (9, 16 ou 30): ").strip()
+    return int(tam_tab)
 
 
 #devolve quantas bombas o modo escolhido tem
@@ -117,7 +121,7 @@ def calcular_dicas(tab: list):
 
 def converter_input(casa: str, tab: list) -> tuple:
     #se for < 2, se for > 3 e se a parte depois da letra NÃO FOR só digito -> retorna None
-    if len(casa) < 2 or len(casa) > 3 or not casa[1:].isdigit():
+    if len(casa) < 2 or len(casa) > 3 or not casa[1:].isdecimal():
         return None
     
     col = ord(casa[0]) - ord('a')
@@ -159,14 +163,54 @@ def abrir_vazias(casa_escolhida: tuple, gabarito: list, estado: list):
     return casa_aberta
 
 
-def pedir_casa(gabarito: list):
+def pedir_casa(gabarito: list, estado: list) -> tuple:
     casa = str(input("\nDigite a casa que quer selecionar (exemplo: A1): ")).lower().strip()
     casa_escolhida = converter_input(casa, gabarito)
     while casa_escolhida == None:
         print("Digite uma casa válida!")
         casa = str(input("\nDigite a casa que quer selecionar (exemplo: A1): ")).lower().strip()
         casa_escolhida = converter_input(casa, gabarito)
-    return casa_escolhida
+
+    linha = casa_escolhida[0]
+    coluna = casa_escolhida[1]
+    if estado[linha][coluna] == FECHADA:
+        resposta = input("\nQuer <A>brir a casa ou <M>arcar? ").lower().strip()
+        while resposta not in ['a', 'm']:
+            print("Digite 'a'(abrir casa) ou 'm'(marcar casa)!")
+            resposta = input("\nQuer <A>brir a casa ou <M>arcar? ").lower().strip()
+
+        if resposta == 'a':
+            return casa_escolhida, ABRIR
+        else:
+            return casa_escolhida, COLOCAR_BANDEIRA
+
+    elif estado[linha][coluna] == BANDEIRA:
+        resposta = input("Casa com bandeira, deseja retirar? [s/n]").lower().strip()
+        while resposta not in ['s', 'n']:
+            print("Digite 's' ou 'n'!")
+            resposta = input("Casa com bandeira, deseja retirar? [s/n]").lower().strip()
+
+        if resposta == 's':
+            return casa_escolhida, RETIRAR_BANDEIRA
+        else:
+            print("Selecione uma nova casa!")
+            return pedir_casa(gabarito, estado)
+    else: #casa já aberta
+        print("Selecione uma nova casa!")
+        return pedir_casa(gabarito, estado)
+        
+
+def colocar_bandeira(casa_escolhida: tuple, estado: list):
+    linha = casa_escolhida[0]
+    coluna = casa_escolhida[1]
+    estado[linha][coluna] = BANDEIRA
+
+
+def retirar_bandeira(casa_escolhida: tuple, estado: list):
+    linha = casa_escolhida[0]
+    coluna = casa_escolhida[1]
+    estado[linha][coluna] = FECHADA
+
     
 ## LOOP JOGO
 
@@ -193,17 +237,24 @@ print("======= TABULEIRO =======")
 mostrar_matriz(gabarito, estado)
 
 while not ganhou and not perdeu:
-    casa_escolhida = pedir_casa(gabarito)
-    resultado = abrir_vazias(casa_escolhida, gabarito, estado)
+    casa_escolhida, marcacao = pedir_casa(gabarito, estado)
+    
+    if marcacao == ABRIR:
+        resultado = abrir_vazias(casa_escolhida, gabarito, estado)
 
-    if resultado == SEGURA:
-        print()
+        if resultado == SEGURA:
+            print()
+            mostrar_matriz(gabarito, estado)
+        elif resultado == EXPLODIU:
+            perdeu = True
+
+    elif marcacao == COLOCAR_BANDEIRA:
+        colocar_bandeira(casa_escolhida, estado)
         mostrar_matriz(gabarito, estado)
-    elif resultado == EXPLODIU:
-        perdeu = True
-    elif resultado == INVALIDA:
-        print("Casa já aberta, escolha outra!") #função pedir input
-        
+    elif marcacao == RETIRAR_BANDEIRA:
+        retirar_bandeira(casa_escolhida, estado)
+        mostrar_matriz(gabarito, estado)
+
 if perdeu:
     print()
     mostrar_bombas(gabarito)

@@ -1,4 +1,5 @@
 from random import randint
+DEBUG : bool = False
 BOMBA : int = -1
 FECHADA : int = -10
 ABERTA : int = 1
@@ -68,6 +69,27 @@ def mostrar_matriz(tab: list, estado: list):
         print()
 
 
+def mostrar_bombas(tab: list):
+    #tab = conteúdo real das casas | estado = quais estão fechadas/abertas
+    linhas = len(tab)
+    colunas = len(tab[0])
+    
+    ## LINHA VISUAL COLUNA
+    print(" " * 5, end = "") #adiciona espaços para alinhar letras na matriz
+    for i in range(colunas):
+        print(chr(ord('A') + i), end = " ") #pega chr do int e adiciona i para mostras as letras seguintes
+    print()
+    
+    for linha in range(linhas):
+        print(f"{linha + 1: 3}", end = "  ") #COLUNA VISUAL com espaçamento fixo
+        for coluna in range(colunas):
+            if tab[linha][coluna] == BOMBA:
+                    print("*", end = " ")
+            else:
+                print("■", end = " ")
+        print()
+
+
 #coloca as bombas em casas aleatórias de tab
 def sortear_bombas(tab: list, qntd_bombas: int, tam_tab: int):
     bombas = 0
@@ -94,7 +116,6 @@ def calcular_dicas(tab: list):
 
 
 def converter_input(casa: str, tab: list) -> tuple:
-    casa = casa.lower().strip()
     #se for < 2, se for > 3 e se a parte depois da letra NÃO FOR só digito -> retorna None
     if len(casa) < 2 or len(casa) > 3 or not casa[1:].isdigit():
         return None
@@ -152,22 +173,38 @@ def pedir_casa(gabarito: list):
 #uma matriz com as bombas e dicas já sorteadas que o jogador não vê.
 #usada para comparação com os inputs do jogador (tab -> gabarito).
 #outra matriz toda fechada (no inicio) e que salva as casas abertas pelo jogador. (estado)
+ganhou : bool = False
+perdeu : bool = False
 tam_tab = escolher_tamanho()
 gabarito = criar_matriz(tam_tab, 0) #gabarito -> começa tudo 0 (livre)
 estado = criar_matriz(tam_tab, FECHADA) #começa tudo fechado
-estado_teste = criar_matriz(tam_tab, ABERTA)
 qntd_bombas = quantidade_bombas(tam_tab)
 sortear_bombas(gabarito, qntd_bombas, tam_tab)
 calcular_dicas(gabarito)
-print("GABARITO")
-mostrar_matriz(gabarito, estado_teste)
-print()
-mostrar_matriz(gabarito, estado)
-print()
 
-casa = str(input("Digite a casa que quer selecionar (exemplo: A1): "))
-casa_escolhida = converter_input(casa, gabarito)
-resultado = abrir_vazias(casa_escolhida, gabarito, estado)
+estado_teste = criar_matriz(tam_tab, ABERTA) #TESTE
 
-print()
+if DEBUG:
+    print("======= GABARITO =======")
+    mostrar_matriz(gabarito, estado_teste)
+    print()
+
+print("======= TABULEIRO =======")
 mostrar_matriz(gabarito, estado)
+
+while not ganhou and not perdeu:
+    casa_escolhida = pedir_casa(gabarito)
+    resultado = abrir_vazias(casa_escolhida, gabarito, estado)
+
+    if resultado == SEGURA:
+        print()
+        mostrar_matriz(gabarito, estado)
+    elif resultado == EXPLODIU:
+        perdeu = True
+    elif resultado == INVALIDA:
+        print("Casa já aberta, escolha outra!") #função pedir input
+        
+if perdeu:
+    print()
+    mostrar_bombas(gabarito)
+    print("\nVOCÊ EXPLODIU!\n")

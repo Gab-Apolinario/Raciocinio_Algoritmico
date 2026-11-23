@@ -88,17 +88,32 @@ def calcular_dicas(tab: list):
                                 tab[viz_lin][viz_col] += 1
 
 
+def converter_input(casa: str, tab: list) -> tuple:
+    casa = casa.lower().strip()
+    #se for < 2, se for > 3 e se a parte depois da letra NÃO FOR só digito -> retorna None
+    if len(casa) < 2 or len(casa) > 3 or not casa[1:].isdigit():
+        return None
+    
+    col = ord(casa[0]) - ord('a')
+    lin = int(casa[1:]) - 1
+
+    if 0 <= lin < len(tab) and 0 <= col < len(tab[lin]):
+        return lin, col
+
+    return None
+
+
 #uma matriz com as bombas e dicas já sorteadas que o jogador não vê.
 #usada para comparação com os inputs do jogador (tab -> gabarito).
 #outra matriz toda fechada (no inicio) e que salva as casas abertas pelo jogador. (estado)
-tam_tab = escolher_tamanho()
-gabarito = criar_matriz(tam_tab, 0) #gabarito -> começa tudo 0 (livre)
-estado = criar_matriz(tam_tab, FECHADA) #começa tudo fechado
-estado_teste = criar_matriz(tam_tab, ABERTA)
-qntd_bombas = quantidade_bombas(tam_tab)
-sortear_bombas(gabarito, qntd_bombas, tam_tab)
-calcular_dicas(gabarito)
-print("GABARITO")
-mostrar_matriz(gabarito, estado_teste)
-print()
-mostrar_matriz(gabarito, estado)
+# tam_tab = escolher_tamanho()
+# gabarito = criar_matriz(tam_tab, 0) #gabarito -> começa tudo 0 (livre)
+# estado = criar_matriz(tam_tab, FECHADA) #começa tudo fechado
+# estado_teste = criar_matriz(tam_tab, ABERTA)
+# qntd_bombas = quantidade_bombas(tam_tab)
+# sortear_bombas(gabarito, qntd_bombas, tam_tab)
+# calcular_dicas(gabarito)
+# print("GABARITO")
+# mostrar_matriz(gabarito, estado_teste)
+# print()
+# mostrar_matriz(gabarito, estado)

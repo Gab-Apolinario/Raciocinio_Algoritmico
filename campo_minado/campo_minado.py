@@ -123,6 +123,21 @@ def abrir_casa(casa_escolhida: tuple, gabarito: list, estado: list):
     return SEGURA
 
 
+def abrir_vazias(casa_escolhida: tuple, gabarito: list, estado: list):
+    linha = casa_escolhida[0]
+    coluna = casa_escolhida[1]
+    casa_aberta = abrir_casa(casa_escolhida, gabarito, estado)
+    if casa_aberta == SEGURA and gabarito[linha][coluna] == 0:
+        for lin in range(-1, 2, 1):
+            for col in range(-1, 2, 1):
+                viz_lin = linha + lin #casa vizinha
+                viz_col = coluna + col #casa vizinha
+                casa_vizinha = viz_lin, viz_col
+                if 0 <= viz_lin < len(gabarito) and 0 <= viz_col < len(gabarito[linha]): #ver se a casa existe. linha é >= 0 e < totalCasas. Coluna >= 0 e < totalColunas
+                    abrir_vazias(casa_vizinha, gabarito, estado)
+    return casa_aberta
+
+
 #uma matriz com as bombas e dicas já sorteadas que o jogador não vê.
 #usada para comparação com os inputs do jogador (tab -> gabarito).
 #outra matriz toda fechada (no inicio) e que salva as casas abertas pelo jogador. (estado)
@@ -133,13 +148,15 @@ estado_teste = criar_matriz(tam_tab, ABERTA)
 qntd_bombas = quantidade_bombas(tam_tab)
 sortear_bombas(gabarito, qntd_bombas, tam_tab)
 calcular_dicas(gabarito)
+print("GABARITO")
+mostrar_matriz(gabarito, estado_teste)
+print()
+mostrar_matriz(gabarito, estado)
+print()
 
 casa = str(input("Digite a casa que quer selecionar (exemplo: A1): "))
 casa_escolhida = converter_input(casa, gabarito)
-abrir_casa(casa_escolhida, gabarito, estado)
-
-print("GABARITO")
-mostrar_matriz(gabarito, estado_teste)
+resultado = abrir_vazias(casa_escolhida, gabarito, estado)
 
 print()
 mostrar_matriz(gabarito, estado)

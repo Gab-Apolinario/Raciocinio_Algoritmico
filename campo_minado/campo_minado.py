@@ -3,6 +3,9 @@ BOMBA : int = -1
 FECHADA : int = -10
 ABERTA : int = 1
 BANDEIRA : int = 100
+SEGURA : int = 2 #abriu uma casa sem bomba
+EXPLODIU : int = -2 #abriu uma bomba
+INVALIDA : int = 20 #casa já aberta ou com bandeira, nada muda
 
 #pergunta o tamanho do tabuleiro e repete até a resposta ser válida
 def escolher_tamanho():
@@ -58,6 +61,8 @@ def mostrar_matriz(tab: list, estado: list):
             else: #casa aberta
                 if tab[linha][coluna] == BOMBA:
                     print("*", end = " ")
+                elif tab[linha][coluna] == 0:
+                    print(" ", end = " ")
                 else:
                     print(tab[linha][coluna], end = " ")
         print()
@@ -103,17 +108,38 @@ def converter_input(casa: str, tab: list) -> tuple:
     return None
 
 
+def abrir_casa(casa_escolhida: tuple, gabarito: list, estado: list):
+    linha = casa_escolhida[0]
+    coluna = casa_escolhida[1]
+    
+    if estado[linha][coluna] != FECHADA: #está ABERTA ou BANDEIRA
+        return INVALIDA
+     
+    estado[linha][coluna] = ABERTA #abre a casa
+    if gabarito[linha][coluna] == BOMBA:
+        return EXPLODIU
+        #perde jogo
+
+    return SEGURA
+
+
 #uma matriz com as bombas e dicas já sorteadas que o jogador não vê.
 #usada para comparação com os inputs do jogador (tab -> gabarito).
 #outra matriz toda fechada (no inicio) e que salva as casas abertas pelo jogador. (estado)
-# tam_tab = escolher_tamanho()
-# gabarito = criar_matriz(tam_tab, 0) #gabarito -> começa tudo 0 (livre)
-# estado = criar_matriz(tam_tab, FECHADA) #começa tudo fechado
-# estado_teste = criar_matriz(tam_tab, ABERTA)
-# qntd_bombas = quantidade_bombas(tam_tab)
-# sortear_bombas(gabarito, qntd_bombas, tam_tab)
-# calcular_dicas(gabarito)
-# print("GABARITO")
-# mostrar_matriz(gabarito, estado_teste)
-# print()
-# mostrar_matriz(gabarito, estado)
+tam_tab = escolher_tamanho()
+gabarito = criar_matriz(tam_tab, 0) #gabarito -> começa tudo 0 (livre)
+estado = criar_matriz(tam_tab, FECHADA) #começa tudo fechado
+estado_teste = criar_matriz(tam_tab, ABERTA)
+qntd_bombas = quantidade_bombas(tam_tab)
+sortear_bombas(gabarito, qntd_bombas, tam_tab)
+calcular_dicas(gabarito)
+
+casa = str(input("Digite a casa que quer selecionar (exemplo: A1): "))
+casa_escolhida = converter_input(casa, gabarito)
+abrir_casa(casa_escolhida, gabarito, estado)
+
+print("GABARITO")
+mostrar_matriz(gabarito, estado_teste)
+
+print()
+mostrar_matriz(gabarito, estado)

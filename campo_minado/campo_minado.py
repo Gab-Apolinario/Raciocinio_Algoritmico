@@ -138,6 +138,17 @@ def abrir_vazias(casa_escolhida: tuple, gabarito: list, estado: list):
     return casa_aberta
 
 
+def pedir_casa(gabarito: list):
+    casa = str(input("\nDigite a casa que quer selecionar (exemplo: A1): ")).lower().strip()
+    casa_escolhida = converter_input(casa, gabarito)
+    while casa_escolhida == None:
+        print("Digite uma casa válida!")
+        casa = str(input("\nDigite a casa que quer selecionar (exemplo: A1): ")).lower().strip()
+        casa_escolhida = converter_input(casa, gabarito)
+    return casa_escolhida
+    
+## LOOP JOGO
+
 #uma matriz com as bombas e dicas já sorteadas que o jogador não vê.
 #usada para comparação com os inputs do jogador (tab -> gabarito).
 #outra matriz toda fechada (no inicio) e que salva as casas abertas pelo jogador. (estado)

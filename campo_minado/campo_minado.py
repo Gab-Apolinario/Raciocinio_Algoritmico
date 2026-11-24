@@ -1,5 +1,6 @@
 from random import randint
-DEBUG : bool = False
+import time
+DEBUG : bool = True
 TAMANHOS : list = [0, 9, 16, 30] #posição = opção do menu (a posição 0, "sair", não é usada)
 BOMBA : int = -1
 FECHADA : int = -10
@@ -28,7 +29,7 @@ def quantidade_bombas(tam_tab: int) -> int:
         qntd_bombas = 10
     elif tam_tab == 16:
         qntd_bombas = 40
-    print(f"QUANTIDADE DE BOMBAS: {qntd_bombas}")
+    print(f"\nQUANTIDADE DE BOMBAS: {qntd_bombas}\n")
     return qntd_bombas
 
 
@@ -95,12 +96,14 @@ def mostrar_bombas(tab: list):
 
 
 #coloca as bombas em casas aleatórias de tab
-def sortear_bombas(tab: list, qntd_bombas: int, tam_tab: int):
+def sortear_bombas(tab: list, qntd_bombas: int, tam_tab: int, casa_escolhida: tuple):
     bombas = 0
     while bombas < qntd_bombas:
+        linha_escolhida = casa_escolhida[0]
+        coluna_escolhida = casa_escolhida[1]
         linha = randint(0, tam_tab - 1)
         coluna = randint(0, len(tab[linha]) - 1)
-        if tab[linha][coluna] == 0: #casa livre
+        if tab[linha][coluna] == 0 and (linha,coluna) != (casa_escolhida): #casa livre E diferente da primeira jogada
             tab[linha][coluna] = BOMBA #vira bomba
             bombas += 1 #soma somente quando altera casa para bomba
 
@@ -230,8 +233,19 @@ def checar_vitoria(gabarito: list, estado: list) -> bool:
     return vitoria_abrindo_tudo(gabarito, estado) or vitoria_marcando_bombas(gabarito, estado)
 
 
+#transforma segundos (float) do time.time() em texto "X min e Y s"
+def formatar_tempo(segundos: float) -> str:
+    total = int(segundos) #descarta as frações
+    minutos = total // 60 #minutos inteiros
+    seg = total % 60 #segundos que sobraram
+    return f"{minutos} min e {seg} s"
+
+
 def menu() -> int:
+    print("===============================\n")
     print("BEM VINDO AO JOGO CAMPO MINADO\n")
+    print("===============================\n")
+    time.sleep(1)
     print("Escolha a dificuldade que quer jogar!\n")
     print("OPÇÕES:")
     print("   1. Principiante  (9x9, 10 bombas)")
@@ -239,10 +253,10 @@ def menu() -> int:
     print("   3. Especialista  (30x16, 99 bombas)")
     print("   0. SAIR")
     
-    resposta = input("Digite sua opção (número): ").strip()
+    resposta = input("\nDigite sua opção (número): ").strip()
     while not resposta.isdecimal() or int(resposta) not in [0, 1, 2, 3]: 
-        print("Digite uma opção válida!")
-        resposta = input("Digite sua opção (número): ").strip()
+        print("\nDigite uma opção válida!")
+        resposta = input("\nDigite sua opção (número): ").strip()
     return int(resposta)
 
 def jogar(tam_tab: int):
@@ -251,30 +265,37 @@ def jogar(tam_tab: int):
     #outra matriz toda fechada (no inicio) e que salva as casas abertas pelo jogador. (estado)
     ganhou : bool = False
     perdeu : bool = False
+    primeira_jogada : bool = True
+    jogadas : int = 0
+    tempo_jogado = 0
     gabarito = criar_matriz(tam_tab, 0) #gabarito -> começa tudo 0 (livre)
     estado = criar_matriz(tam_tab, FECHADA) #começa tudo fechado
     qntd_bombas = quantidade_bombas(tam_tab)
-    sortear_bombas(gabarito, qntd_bombas, tam_tab)
-    calcular_dicas(gabarito)
-
-    if DEBUG:
-        estado_teste = criar_matriz(tam_tab, ABERTA) #TESTE
-        print("======= GABARITO =======")
-        mostrar_matriz(gabarito, estado_teste)
-        print()
 
     print("======= TABULEIRO =======")
     mostrar_matriz(gabarito, estado)
+    tempo_inicial = time.time()
 
     # LOOP JOGO
     while not ganhou and not perdeu:
         casa_escolhida, marcacao = pedir_casa(gabarito, estado)
-        
+        if primeira_jogada:
+            sortear_bombas(gabarito, qntd_bombas, tam_tab, casa_escolhida)
+            calcular_dicas(gabarito)
+            primeira_jogada = False
+
+        if DEBUG:
+                estado_teste = criar_matriz(tam_tab, ABERTA) #TESTE
+                print("======= GABARITO =======")
+                mostrar_matriz(gabarito, estado_teste)
+                print()
+
         if marcacao == ABRIR:
             resultado = abrir_vazias(casa_escolhida, gabarito, estado)
 
             if resultado == SEGURA:
                 ganhou = checar_vitoria(gabarito, estado)
+                jogadas += 1
                 print()
                 mostrar_matriz(gabarito, estado)
             elif resultado == EXPLODIU:
@@ -284,26 +305,39 @@ def jogar(tam_tab: int):
             colocar_bandeira(casa_escolhida, estado)
             ganhou = checar_vitoria(gabarito, estado)
             mostrar_matriz(gabarito, estado)
+            jogadas += 1
         elif marcacao == RETIRAR_BANDEIRA:
             retirar_bandeira(casa_escolhida, estado)
             ganhou = checar_vitoria(gabarito, estado)
             mostrar_matriz(gabarito, estado)
+            jogadas += 1
 
     if perdeu:
+        tempo_final = time.time()
+        tempo_jogado = tempo_final - tempo_inicial
         print()
         mostrar_bombas(gabarito)
         print("\nVOCÊ EXPLODIU!\n")
+        print(f"Você realizou {jogadas} jogadas.\n")
+        print(f"Você perdeu em {formatar_tempo(tempo_jogado)}.\n")
 
     if ganhou:
+        tempo_final = time.time()
+        tempo_jogado = tempo_final - tempo_inicial
         mostrar_matriz(gabarito, estado)
         if vitoria_abrindo_tudo(gabarito, estado):
             print("\nPARABÉNS, VOCÊ GANHOU ABRINDO TODAS AS CASAS VAZIAS!")
+            print(f"Você ganhou em {jogadas} jogadas.\n")
+            print(f"Você ganhou em {formatar_tempo(tempo_jogado)}.\n")
         else:
             print("\nPARABÉNS, VOCÊ GANHOU MARCANDO TODAS AS BOMBAS!")
+            print(f"Você ganhou em {jogadas} jogadas.\n")
+            print(f"Você ganhou em {formatar_tempo(tempo_jogado)}.\n")
 
 
 opcao = menu()
 while opcao != 0:
     jogar(TAMANHOS[opcao])
+    time.sleep(3)
     opcao = menu()
 print("\nFIM DE JOGO!\n")

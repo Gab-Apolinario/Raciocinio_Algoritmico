@@ -335,9 +335,10 @@ def jogar(tam_tab: int):
             print(f"Você ganhou em {formatar_tempo(tempo_jogado)}.\n")
 
 
-opcao = menu()
-while opcao != 0:
-    jogar(TAMANHOS[opcao])
-    time.sleep(3)
+if __name__ == "__main__":
     opcao = menu()
-print("\nFIM DE JOGO!\n")
+    while opcao != 0:
+        jogar(TAMANHOS[opcao])
+        time.sleep(3)
+        opcao = menu()
+    print("\nFIM DE JOGO!\n")

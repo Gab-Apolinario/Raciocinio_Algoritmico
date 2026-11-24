@@ -1,5 +1,6 @@
 from random import randint
 DEBUG : bool = False
+TAMANHOS : list = [0, 9, 16, 30] #posição = opção do menu (a posição 0, "sair", não é usada)
 BOMBA : int = -1
 FECHADA : int = -10
 ABERTA : int = 1
@@ -12,13 +13,12 @@ COLOCAR_BANDEIRA : int = 2000
 RETIRAR_BANDEIRA : int = 3000
 
 #pergunta o tamanho do tabuleiro e repete até a resposta ser válida
-#pergunta o tamanho do tabuleiro e repete até a resposta ser válida
-def escolher_tamanho():
-    tam_tab = input("Digite o tamanho do tabuleiro que quer jogar (9, 16 ou 30): ").strip()
-    while not tam_tab.isdecimal() or int(tam_tab) not in [9, 16, 30]: #valida se todos os dígitos são numeros e se está dentro dos permitidos
-        print("Digite um tamanho válido!")
-        tam_tab = input("Digite o tamanho do tabuleiro que quer jogar (9, 16 ou 30): ").strip()
-    return int(tam_tab)
+# def escolher_tamanho():
+#     tam_tab = input("Digite o tamanho do tabuleiro que quer jogar (9, 16 ou 30): ").strip()
+#     while not tam_tab.isdecimal() or int(tam_tab) not in [9, 16, 30]: #valida se todos os dígitos são numeros e se está dentro dos permitidos
+#         print("Digite um tamanho válido!")
+#         tam_tab = input("Digite o tamanho do tabuleiro que quer jogar (9, 16 ou 30): ").strip()
+#     return int(tam_tab)
 
 
 #devolve quantas bombas o modo escolhido tem
@@ -143,8 +143,6 @@ def abrir_casa(casa_escolhida: tuple, gabarito: list, estado: list):
     estado[linha][coluna] = ABERTA #abre a casa
     if gabarito[linha][coluna] == BOMBA:
         return EXPLODIU
-        #perde jogo
-
     return SEGURA
 
 
@@ -211,51 +209,101 @@ def retirar_bandeira(casa_escolhida: tuple, estado: list):
     coluna = casa_escolhida[1]
     estado[linha][coluna] = FECHADA
 
+
+def vitoria_abrindo_tudo(gabarito: list, estado: list) -> bool:
+    for linha in range(len(gabarito)):
+        for coluna in range(len(gabarito[linha])):
+            if gabarito[linha][coluna] != BOMBA and estado[linha][coluna] != ABERTA:
+                return False
+    return True
+
+
+def vitoria_marcando_bombas(gabarito: list, estado: list) -> bool:
+    for linha in range(len(gabarito)):
+        for coluna in range(len(gabarito[linha])):
+            if (gabarito[linha][coluna] != BOMBA) != (estado[linha][coluna] != BANDEIRA):
+                return False
+    return True
+
+
+def checar_vitoria(gabarito: list, estado: list) -> bool:
+    return vitoria_abrindo_tudo(gabarito, estado) or vitoria_marcando_bombas(gabarito, estado)
+
+
+def menu() -> int:
+    print("BEM VINDO AO JOGO CAMPO MINADO\n")
+    print("Escolha a dificuldade que quer jogar!\n")
+    print("OPÇÕES:")
+    print("   1. Principiante  (9x9, 10 bombas)")
+    print("   2. Intermediário (16x16, 40 bombas)")
+    print("   3. Especialista  (30x16, 99 bombas)")
+    print("   0. SAIR")
     
-## LOOP JOGO
+    resposta = input("Digite sua opção (número): ").strip()
+    while not resposta.isdecimal() or int(resposta) not in [0, 1, 2, 3]: 
+        print("Digite uma opção válida!")
+        resposta = input("Digite sua opção (número): ").strip()
+    return int(resposta)
 
-#uma matriz com as bombas e dicas já sorteadas que o jogador não vê.
-#usada para comparação com os inputs do jogador (tab -> gabarito).
-#outra matriz toda fechada (no inicio) e que salva as casas abertas pelo jogador. (estado)
-ganhou : bool = False
-perdeu : bool = False
-tam_tab = escolher_tamanho()
-gabarito = criar_matriz(tam_tab, 0) #gabarito -> começa tudo 0 (livre)
-estado = criar_matriz(tam_tab, FECHADA) #começa tudo fechado
-qntd_bombas = quantidade_bombas(tam_tab)
-sortear_bombas(gabarito, qntd_bombas, tam_tab)
-calcular_dicas(gabarito)
+def jogar(tam_tab: int):
+    #uma matriz com as bombas e dicas já sorteadas que o jogador não vê.
+    #usada para comparação com os inputs do jogador (tab -> gabarito).
+    #outra matriz toda fechada (no inicio) e que salva as casas abertas pelo jogador. (estado)
+    ganhou : bool = False
+    perdeu : bool = False
+    gabarito = criar_matriz(tam_tab, 0) #gabarito -> começa tudo 0 (livre)
+    estado = criar_matriz(tam_tab, FECHADA) #começa tudo fechado
+    qntd_bombas = quantidade_bombas(tam_tab)
+    sortear_bombas(gabarito, qntd_bombas, tam_tab)
+    calcular_dicas(gabarito)
 
-estado_teste = criar_matriz(tam_tab, ABERTA) #TESTE
+    if DEBUG:
+        estado_teste = criar_matriz(tam_tab, ABERTA) #TESTE
+        print("======= GABARITO =======")
+        mostrar_matriz(gabarito, estado_teste)
+        print()
 
-if DEBUG:
-    print("======= GABARITO =======")
-    mostrar_matriz(gabarito, estado_teste)
-    print()
+    print("======= TABULEIRO =======")
+    mostrar_matriz(gabarito, estado)
 
-print("======= TABULEIRO =======")
-mostrar_matriz(gabarito, estado)
+    # LOOP JOGO
+    while not ganhou and not perdeu:
+        casa_escolhida, marcacao = pedir_casa(gabarito, estado)
+        
+        if marcacao == ABRIR:
+            resultado = abrir_vazias(casa_escolhida, gabarito, estado)
 
-while not ganhou and not perdeu:
-    casa_escolhida, marcacao = pedir_casa(gabarito, estado)
-    
-    if marcacao == ABRIR:
-        resultado = abrir_vazias(casa_escolhida, gabarito, estado)
+            if resultado == SEGURA:
+                ganhou = checar_vitoria(gabarito, estado)
+                print()
+                mostrar_matriz(gabarito, estado)
+            elif resultado == EXPLODIU:
+                perdeu = True
 
-        if resultado == SEGURA:
-            print()
+        elif marcacao == COLOCAR_BANDEIRA:
+            colocar_bandeira(casa_escolhida, estado)
+            ganhou = checar_vitoria(gabarito, estado)
             mostrar_matriz(gabarito, estado)
-        elif resultado == EXPLODIU:
-            perdeu = True
+        elif marcacao == RETIRAR_BANDEIRA:
+            retirar_bandeira(casa_escolhida, estado)
+            ganhou = checar_vitoria(gabarito, estado)
+            mostrar_matriz(gabarito, estado)
 
-    elif marcacao == COLOCAR_BANDEIRA:
-        colocar_bandeira(casa_escolhida, estado)
-        mostrar_matriz(gabarito, estado)
-    elif marcacao == RETIRAR_BANDEIRA:
-        retirar_bandeira(casa_escolhida, estado)
-        mostrar_matriz(gabarito, estado)
+    if perdeu:
+        print()
+        mostrar_bombas(gabarito)
+        print("\nVOCÊ EXPLODIU!\n")
 
-if perdeu:
-    print()
-    mostrar_bombas(gabarito)
-    print("\nVOCÊ EXPLODIU!\n")
+    if ganhou:
+        mostrar_matriz(gabarito, estado)
+        if vitoria_abrindo_tudo(gabarito, estado):
+            print("\nPARABÉNS, VOCÊ GANHOU ABRINDO TODAS AS CASAS VAZIAS!")
+        else:
+            print("\nPARABÉNS, VOCÊ GANHOU MARCANDO TODAS AS BOMBAS!")
+
+
+opcao = menu()
+while opcao != 0:
+    jogar(TAMANHOS[opcao])
+    opcao = menu()
+print("\nFIM DE JOGO!\n")

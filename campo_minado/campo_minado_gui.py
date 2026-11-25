@@ -10,10 +10,10 @@ fim_de_jogo : bool = False
 def ao_clicar():
     #label.config(text="CLICADO")
     botao.destroy()
-    iniciar_jogo(16)
+    iniciar_jogo(9)
 
 
-def clicar(linha, coluna):
+def clicar(linha: int, coluna: int):
     global primeira_jogada, fim_de_jogo
     if fim_de_jogo:
         return None
@@ -48,6 +48,27 @@ def clicar(linha, coluna):
 
     atualizar_tela(gabarito, estado)
 
+
+def clicar_direito(linha: int, coluna: int):
+    global fim_de_jogo
+    casa_escolhida : tuple = linha, coluna
+    if fim_de_jogo or primeira_jogada:
+        return None
+
+    if estado[linha][coluna] == cm.FECHADA:
+        cm.colocar_bandeira(casa_escolhida, estado)
+    elif estado[linha][coluna] == cm.BANDEIRA:
+        cm.retirar_bandeira(casa_escolhida, estado)
+    else:
+        return None
+    
+    ganhou = cm.checar_vitoria(gabarito, estado)
+    if ganhou:
+        fim_de_jogo = True
+        label.config(text="VOCÊ GANHOU!")
+    atualizar_tela(gabarito, estado)
+
+
 def criar_grid(tabuleiro: tk.Frame, tam_tab: int):
     tam_col : int = tam_tab
     if tam_tab == 30:
@@ -58,6 +79,7 @@ def criar_grid(tabuleiro: tk.Frame, tam_tab: int):
         linha_botoes = []
         for coluna in range(tam_col):
             botao = tk.Button(tabuleiro, width=2, height=1, command=lambda linha=linha, coluna=coluna: clicar(linha, coluna))
+            botao.bind("<Button-3>", lambda event, linha=linha, coluna=coluna: clicar_direito(linha, coluna)) #clique com o botão direito
             botao.grid(row=linha, column=coluna)
             linha_botoes.append(botao)
         botoes.append(linha_botoes)
@@ -82,7 +104,7 @@ def atualizar_tela(gabarito: list, estado: list):
                 casa.config(text="", relief="raised", bg="SystemButtonFace")
             elif estado[linha][coluna] == cm.BANDEIRA:
                 #vermelha
-                casa.config(text="#", relief="raised", bg="red")
+                casa.config(text="#", relief="raised", bg="#963636")
             else: #abertas
                 #clicadas
                 if gabarito[linha][coluna] == cm.BOMBA:

@@ -74,13 +74,21 @@ def criar_grid(tabuleiro: tk.Frame, tam_tab: int):
     if tam_tab == 30:
         tam_col = 16
 
+    for coluna in range(tam_col): #letras das colunas -> linha 0 do grid (coluna + 1 para pular o canto vazio)
+        letra = tk.Label(tabuleiro, text=chr(ord('A') + coluna), width=2)
+        letra.grid(row=0, column=coluna + 1)
+
+    for linha in range(tam_tab): #números das linhas -> coluna 0 do grid (linha + 1 para pular a linha das letras)
+        numero = tk.Label(tabuleiro, text=str(linha + 1), width=2)
+        numero.grid(row=linha + 1, column=0)
+
     botoes = [] #lista de linhas
     for linha in range(tam_tab):
         linha_botoes = []
         for coluna in range(tam_col):
             botao = tk.Button(tabuleiro, width=2, height=1, command=lambda linha=linha, coluna=coluna: clicar(linha, coluna))
             botao.bind("<Button-3>", lambda event, linha=linha, coluna=coluna: clicar_direito(linha, coluna)) #clique com o botão direito
-            botao.grid(row=linha, column=coluna)
+            botao.grid(row=linha + 1, column=coluna + 1) #+1 por causa das letras e dos números
             linha_botoes.append(botao)
         botoes.append(linha_botoes)
     return botoes

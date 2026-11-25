@@ -26,3 +26,5 @@ TDE_FORCA/ascii_ambiental.md
 TDE_FORCA/testes_forca.py
 TDE_FORCA/info_dicionarios.md
 campo_minado/teste.py
+campo_minado/tkinter.md
+campo_minado/__pycache__/

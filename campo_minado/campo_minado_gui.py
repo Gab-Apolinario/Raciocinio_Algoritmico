@@ -1,20 +1,18 @@
 import tkinter as tk
 import campo_minado as cm
 
+tela_atual : tk.Frame = None #Frame sendo mostrado atualmente
+label : tk.Label = None
 gabarito = []
 estado = []
 botoes = []
 primeira_jogada : bool = True
+jogadas : int = 0
+label_jogadas : tk.Label = None
 fim_de_jogo : bool = False
 
-def ao_clicar():
-    #label.config(text="CLICADO")
-    botao.destroy()
-    iniciar_jogo(9)
-
-
 def clicar(linha: int, coluna: int):
-    global primeira_jogada, fim_de_jogo
+    global primeira_jogada, fim_de_jogo, jogadas
     if fim_de_jogo:
         return None
     
@@ -41,6 +39,8 @@ def clicar(linha: int, coluna: int):
         fim_de_jogo = True
         label.config(text="VOCÊ EXPLODIU!")
     elif resultado == cm.SEGURA:
+        jogadas += 1
+        label_jogadas.config(text=f"Jogadas = {jogadas}")
         ganhou = cm.checar_vitoria(gabarito, estado)
         if ganhou:
             fim_de_jogo = True
@@ -50,15 +50,19 @@ def clicar(linha: int, coluna: int):
 
 
 def clicar_direito(linha: int, coluna: int):
-    global fim_de_jogo
+    global fim_de_jogo, jogadas
     casa_escolhida : tuple = linha, coluna
     if fim_de_jogo or primeira_jogada:
         return None
 
     if estado[linha][coluna] == cm.FECHADA:
         cm.colocar_bandeira(casa_escolhida, estado)
+        jogadas += 1
+        label_jogadas.config(text=f"Jogadas = {jogadas}")
     elif estado[linha][coluna] == cm.BANDEIRA:
         cm.retirar_bandeira(casa_escolhida, estado)
+        jogadas += 1
+        label_jogadas.config(text=f"Jogadas = {jogadas}")
     else:
         return None
     
@@ -95,8 +99,26 @@ def criar_grid(tabuleiro: tk.Frame, tam_tab: int):
 
 
 def iniciar_jogo(tam_tab: int):
-    global gabarito, estado, botoes, primeira_jogada, fim_de_jogo
+    global gabarito, estado, botoes, primeira_jogada, fim_de_jogo, tela_atual, label, jogadas, label_jogadas
+    
+    limpar_tela()
+    jogo_frame = tk.Frame(root)
+    tela_atual = jogo_frame
+    
+    label = tk.Label(tela_atual, font=("Segoe UI", 20), text= "CAMPO MINADO")
+    label.pack()
+    label_jogadas = tk.Label(tela_atual, font=("Segoe UI", 20), text= "Jogadas = 0")
+    label_jogadas.pack()
+    
+    botao_menu = tk.Button(tela_atual, font=("Segoe UI", 20), text= "MENU", command=mostrar_menu)
+    tabuleiro = tk.Frame(tela_atual)
+    tabuleiro.pack()
+    
+    tela_atual.pack()
+    botao_menu.pack()
+    
     primeira_jogada = True
+    jogadas = 0
     fim_de_jogo = False
     gabarito = cm.criar_matriz(tam_tab, 0) #gabarito -> começa tudo 0 (livre)
     estado = cm.criar_matriz(tam_tab, cm.FECHADA)
@@ -123,19 +145,33 @@ def atualizar_tela(gabarito: list, estado: list):
                     casa.config(text=str(gabarito[linha][coluna]), relief="sunken", bg="lightgray")
 
 
+def limpar_tela():
+    if tela_atual != None:
+        tela_atual.destroy()
+
+
+def mostrar_menu():
+    global tela_atual
+    limpar_tela()
+    menu_frame = tk.Frame(root)
+    tela_atual = menu_frame
+    titulo = tk.Label(menu_frame, text="CAMPO MINADO")
+    titulo.pack()
+    botao_iniciante = tk.Button(menu_frame, font=("Segoe UI", 20), text="Modo Iniciante (9x9)", command=lambda: iniciar_jogo(9))
+    botao_intermediario = tk.Button(menu_frame, font=("Segoe UI", 20), text="Modo Intermediário (16x16)", command=lambda: iniciar_jogo(16))
+    botao_especialista = tk.Button(menu_frame, font=("Segoe UI", 20), text="Modo Especialista (30x16)", command=lambda: iniciar_jogo(30))
+    botao_sair = tk.Button(menu_frame, font=("Segoe UI", 20), text="SAIR", command=root.destroy)
+    botao_iniciante.pack()
+    botao_intermediario.pack()
+    botao_especialista.pack()
+    botao_sair.pack()
+    
+    menu_frame.pack()
+
+
 root = tk.Tk() #cria janela
 root.title("CAMPO MINADO") #nome da janela
 root.state("zoomed") #tela cheia
 
-layout = tk.Frame(root) #passa o pai como parâmetro
-
-label = tk.Label(layout, font=("Segoe UI", 20), text="CAMPO MINADO")
-botao = tk.Button(layout, font=("Segoe UI", 20), text="Iniciar Botão", command=ao_clicar)
-layout.pack() #.pack() -> mostra na tela
-label.pack()
-botao.pack()
-
-tabuleiro = tk.Frame(layout)
-tabuleiro.pack()
-
+mostrar_menu()
 root.mainloop() #loop principal para rodar -> SEMPRE NO FINAL

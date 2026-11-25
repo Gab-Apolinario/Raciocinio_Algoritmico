@@ -4,17 +4,34 @@ import campo_minado as cm
 gabarito = []
 estado = []
 botoes = []
+primeira_jogada = True
 
 def ao_clicar():
     #label.config(text="CLICADO")
     label.destroy()
     botao.destroy()
-    iniciar_jogo(9)
+    iniciar_jogo(16)
 
 
 def clicar(linha, coluna):
-    print(linha, coluna)
+    global primeira_jogada
+    casa_escolhida : tuple = linha, coluna
+    tam_tab : int = len(estado)
+    qntd_bombas : int = cm.quantidade_bombas(tam_tab)
+    
+    if primeira_jogada:
+        cm.sortear_bombas(gabarito, qntd_bombas, tam_tab, casa_escolhida)
+        cm.calcular_dicas(gabarito)
+        primeira_jogada = False
 
+    if cm.DEBUG:
+        estado_teste = cm.criar_matriz(tam_tab, cm.ABERTA) #TESTE
+        print("======= GABARITO =======")
+        cm.mostrar_matriz(gabarito, estado_teste)
+    
+    resultado = cm.abrir_vazias(casa_escolhida, gabarito, estado)
+
+    atualizar_tela(gabarito, estado)
 
 def criar_grid(tabuleiro: tk.Frame, tam_tab: int):
     tam_col : int = tam_tab
@@ -37,10 +54,6 @@ def iniciar_jogo(tam_tab: int):
     gabarito = cm.criar_matriz(tam_tab, 0) #gabarito -> começa tudo 0 (livre)
     estado = cm.criar_matriz(tam_tab, cm.FECHADA)
     botoes = criar_grid(tabuleiro, tam_tab)
-    estado[0][0] = cm.ABERTA
-    estado[0][1] = cm.BANDEIRA
-    gabarito[0][0] = 3
-    atualizar_tela(gabarito, estado)
 
 
 def atualizar_tela(gabarito: list, estado: list):
@@ -71,7 +84,7 @@ layout = tk.Frame(root) #passa o pai como parâmetro
 tabuleiro = tk.Frame(layout)
 tabuleiro.pack()
 
-label = tk.Label(layout, font=("Segoe UI", 20), text="Label Teste")
+label = tk.Label(layout, font=("Segoe UI", 20), text="CAMPO MINADO")
 botao = tk.Button(layout, font=("Segoe UI", 20), text="Iniciar Botão", command=ao_clicar)
 layout.pack() #.pack() -> mostra na tela
 label.pack()

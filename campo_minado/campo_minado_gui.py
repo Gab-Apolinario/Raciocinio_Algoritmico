@@ -4,32 +4,47 @@ import campo_minado as cm
 gabarito = []
 estado = []
 botoes = []
-primeira_jogada = True
+primeira_jogada : bool = True
+fim_de_jogo : bool = False
 
 def ao_clicar():
     #label.config(text="CLICADO")
-    label.destroy()
     botao.destroy()
     iniciar_jogo(16)
 
 
 def clicar(linha, coluna):
-    global primeira_jogada
+    global primeira_jogada, fim_de_jogo
+    if fim_de_jogo:
+        return None
+    
     casa_escolhida : tuple = linha, coluna
     tam_tab : int = len(estado)
-    qntd_bombas : int = cm.quantidade_bombas(tam_tab)
     
     if primeira_jogada:
+        qntd_bombas : int = cm.quantidade_bombas(tam_tab)
         cm.sortear_bombas(gabarito, qntd_bombas, tam_tab, casa_escolhida)
         cm.calcular_dicas(gabarito)
         primeira_jogada = False
-
-    if cm.DEBUG:
-        estado_teste = cm.criar_matriz(tam_tab, cm.ABERTA) #TESTE
-        print("======= GABARITO =======")
-        cm.mostrar_matriz(gabarito, estado_teste)
+        if cm.DEBUG: #só mostra gabarito na primeira jogada
+            estado_teste = cm.criar_matriz(tam_tab, cm.ABERTA) #TESTE
+            print("======= GABARITO =======")
+            cm.mostrar_matriz(gabarito, estado_teste)
     
     resultado = cm.abrir_vazias(casa_escolhida, gabarito, estado)
+    
+    if resultado == cm.EXPLODIU:
+        for linha in range(len(estado)):
+            for coluna in range(len(estado[linha])):
+                if gabarito[linha][coluna] == cm.BOMBA:
+                    estado[linha][coluna] = cm.ABERTA
+        fim_de_jogo = True
+        label.config(text="VOCÊ EXPLODIU!")
+    elif resultado == cm.SEGURA:
+        ganhou = cm.checar_vitoria(gabarito, estado)
+        if ganhou:
+            fim_de_jogo = True
+            label.config(text="VOCÊ GANHOU!")
 
     atualizar_tela(gabarito, estado)
 
@@ -50,7 +65,9 @@ def criar_grid(tabuleiro: tk.Frame, tam_tab: int):
 
 
 def iniciar_jogo(tam_tab: int):
-    global gabarito, estado, botoes
+    global gabarito, estado, botoes, primeira_jogada, fim_de_jogo
+    primeira_jogada = True
+    fim_de_jogo = False
     gabarito = cm.criar_matriz(tam_tab, 0) #gabarito -> começa tudo 0 (livre)
     estado = cm.criar_matriz(tam_tab, cm.FECHADA)
     botoes = criar_grid(tabuleiro, tam_tab)
@@ -69,8 +86,8 @@ def atualizar_tela(gabarito: list, estado: list):
             else: #abertas
                 #clicadas
                 if gabarito[linha][coluna] == cm.BOMBA:
-                    casa.config(text="*", relief="sunken", bg="lightgray")
-                elif gabarito[linha][coluna] == 0:
+                    casa.config(text="*", relief="sunken", bg="#ab2121")
+                elif gabarito[linha][coluna] == 0: #vazias
                     casa.config(text="", relief="sunken", bg="lightgray")
                 else:
                     casa.config(text=str(gabarito[linha][coluna]), relief="sunken", bg="lightgray")
@@ -81,13 +98,14 @@ root.title("CAMPO MINADO") #nome da janela
 root.state("zoomed") #tela cheia
 
 layout = tk.Frame(root) #passa o pai como parâmetro
-tabuleiro = tk.Frame(layout)
-tabuleiro.pack()
 
 label = tk.Label(layout, font=("Segoe UI", 20), text="CAMPO MINADO")
 botao = tk.Button(layout, font=("Segoe UI", 20), text="Iniciar Botão", command=ao_clicar)
 layout.pack() #.pack() -> mostra na tela
 label.pack()
 botao.pack()
+
+tabuleiro = tk.Frame(layout)
+tabuleiro.pack()
 
 root.mainloop() #loop principal para rodar -> SEMPRE NO FINAL
